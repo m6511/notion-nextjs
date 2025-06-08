@@ -1,6 +1,8 @@
 import { Client } from '@notionhq/client';
 import { NotionNextJSConfig, NotionNextJSRuntimeConfig } from '../types';
 import { mergeConfig, validateConfig } from '../config';
+import { simplifyPage, simplifyPages } from '../utils/property-extractor';
+import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 export class NotionNextJS {
 	private client: Client;
@@ -31,9 +33,17 @@ export class NotionNextJS {
 		return id;
 	}
 
-	// Get all pages from a database
-	async getAllPages<T = any>(databaseName: string) {
+	// Get all pages from a database with simplified properties
+	async getAllPages<T = any>(
+		databaseName: string,
+		options?: {
+			filter?: any;
+			sorts?: any;
+			simplify?: boolean;
+		}
+	) {
 		const databaseId = this.getDatabaseId(databaseName);
+		const { filter, sorts, simplify = true } = options || {};
 
 		if (this.config.dataSource === 'local') {
 			// TODO: Implement local cache reading
@@ -43,19 +53,34 @@ export class NotionNextJS {
 		// For now, always use live data
 		const response = await this.client.databases.query({
 			database_id: databaseId,
+			filter,
+			sorts,
 		});
 
-		return response.results as T[];
+		const pages = response.results as PageObjectResponse[];
+
+		if (simplify) {
+			return simplifyPages<T>(pages);
+		}
+
+		return pages as T[];
 	}
 
-	// Get a single page by ID
-	async getPage<T = any>(pageId: string) {
+	// Get a single page by ID with simplified properties
+	async getPage<T = any>(pageId: string, options?: { simplify?: boolean }) {
+		const { simplify = true } = options || {};
+
 		if (this.config.dataSource === 'local') {
 			// TODO: Implement local cache reading
 			console.log('Local data source not yet implemented, falling back to live');
 		}
 
-		const response = await this.client.pages.retrieve({ page_id: pageId });
+		const response = (await this.client.pages.retrieve({ page_id: pageId })) as PageObjectResponse;
+
+		if (simplify) {
+			return simplifyPage<T>(response);
+		}
+
 		return response as T;
 	}
 }
