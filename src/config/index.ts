@@ -3,7 +3,7 @@ import { NotionNextJSConfig, NotionNextJSRuntimeConfig } from '../types';
 // Default configuration
 export const DEFAULT_CONFIG: NotionNextJSRuntimeConfig = {
 	databases: {},
-	dataSource: 'live',
+	dataSource: 'local',
 	outputDir: '.notion-cache',
 	images: {
 		enabled: true,

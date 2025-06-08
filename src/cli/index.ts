@@ -29,10 +29,13 @@ async function setup() {
 
 	// Collect database information
 	const databases: Record<string, string> = {};
-	console.log('Enter your Notion database information (press Enter with empty name to finish):\n');
+	console.log('Enter your Notion database information:\n');
 
+	let isFirstDatabase = true;
 	while (true) {
-		const name = await promptUser('Database name (e.g., "blog"):');
+		const prompt = isFirstDatabase ? 'Database name (e.g., "blog"):' : 'Database name (or press Enter to finish):';
+
+		const name = await promptUser(prompt);
 		if (!name) break;
 
 		const id = await promptUser('Database ID:');
@@ -43,6 +46,7 @@ async function setup() {
 
 		databases[name] = id;
 		console.log(`✅ Added database "${name}"\n`);
+		isFirstDatabase = false;
 	}
 
 	if (Object.keys(databases).length === 0) {
@@ -52,11 +56,12 @@ async function setup() {
 
 	// Ask about additional options
 	const enableImages = await promptUser('Enable image optimization? (Y/n):');
-	const useLocalCache = await promptUser('Enable local caching? (y/N):');
+	const useLocalCache = await promptUser('Enable local caching? (Y/n):');
 
 	// Create configuration
 	const config: NotionNextJSConfig = {
 		databases,
+		dataSource: useLocalCache.toLowerCase() === 'n' ? 'live' : 'local',
 	};
 
 	if (enableImages.toLowerCase() !== 'n') {
@@ -68,8 +73,7 @@ async function setup() {
 		};
 	}
 
-	if (useLocalCache.toLowerCase() === 'y') {
-		config.dataSource = 'local';
+	if (config.dataSource === 'local') {
 		config.outputDir = '.notion-cache';
 	}
 
@@ -80,9 +84,8 @@ async function setup() {
 /** @type {import('notion-nextjs').NotionNextJSConfig} */
 module.exports = {
   databases: ${JSON.stringify(databases, null, 4).replace(/\n/g, '\n  ')},
-${config.dataSource ? `  dataSource: '${config.dataSource}',\n` : ''}${
-		config.outputDir ? `  outputDir: '${config.outputDir}',\n` : ''
-	}${
+  dataSource: '${config.dataSource}',
+${config.outputDir ? `  outputDir: '${config.outputDir}',\n` : ''}${
 		config.images
 			? `  images: {
     enabled: ${config.images.enabled},
