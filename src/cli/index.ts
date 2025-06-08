@@ -50,7 +50,7 @@ async function sync() {
 	const notion = new NotionNextJS(apiKey, config);
 	const client = notion.getNotionClient();
 
-	// Fetch all database schemas
+	// Fetch all database schemas for type generation
 	const databases = new Map();
 
 	for (const [name, databaseId] of Object.entries(config.databases)) {
@@ -82,9 +82,10 @@ async function sync() {
 	fs.writeFileSync(typesPath, typesContent);
 	console.log(`✅ Generated types at ${typesPath}`);
 
-	// TODO: Cache data if dataSource is 'local'
+	// Cache data if configured for local data source
 	if (config.dataSource === 'local') {
-		console.log('\n📦 Local caching will be implemented in the next update!');
+		console.log(''); // Empty line for spacing
+		await notion.syncToCache();
 	}
 
 	console.log('\n✨ Sync complete!\n');
