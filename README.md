@@ -227,3 +227,12 @@ export interface BlogPage extends SimplifiedPage {
 	};
 }
 ```
+
+# TO DO
+
+- [ ] Deploy to npm
+- [ ] Add tests
+- [ ] Add next js example page with dynamic and static pages
+- [ ] Webp image optimization
+- [ ] Support static imports (useful for next/image blurs)
+- [ ] Serve page content as markdown
