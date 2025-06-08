@@ -1,7 +1,7 @@
 import { Client } from '@notionhq/client';
 import { NotionNextJSConfig, NotionNextJSRuntimeConfig } from '../types';
 import { mergeConfig, validateConfig } from '../config';
-import { simplifyPage, simplifyPages } from '../utils/property-extractor';
+import { SimplifiedPage, simplifyPage, simplifyPages } from '../utils/property-extractor';
 import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 export class NotionNextJS {
@@ -34,7 +34,7 @@ export class NotionNextJS {
 	}
 
 	// Get all pages from a database with simplified properties
-	async getAllPages<T = any>(
+	async getAllPages<T extends SimplifiedPage = any>(
 		databaseName: string,
 		options?: {
 			filter?: any;
@@ -67,7 +67,7 @@ export class NotionNextJS {
 	}
 
 	// Get a single page by ID with simplified properties
-	async getPage<T = any>(pageId: string, options?: { simplify?: boolean }) {
+	async getPage<T extends SimplifiedPage = any>(pageId: string, options?: { simplify?: boolean }) {
 		const { simplify = true } = options || {};
 
 		if (this.config.dataSource === 'local') {

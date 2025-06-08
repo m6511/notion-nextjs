@@ -1,12 +1,17 @@
 import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
-type PropertyValue = any;
-type ExtractedProperties = Record<string, PropertyValue>;
+export interface SimplifiedPage extends PageObjectResponse {
+	// Convenience properties
+	title: string | null;
+	coverUrl: string | null;
+	iconUrl: string | null;
+	simplifiedProperties: Record<string, any>;
+}
 
 /**
- * Extract simple values from Notion's complex property structure
+ * Extract simple value from any Notion property
  */
-export function extractPropertyValue(property: any): PropertyValue {
+export function extractPropertyValue(property: any): any {
 	if (!property) return null;
 
 	switch (property.type) {
@@ -87,12 +92,21 @@ export function extractPropertyValue(property: any): PropertyValue {
 		case 'status':
 			return property.status?.name || null;
 
+		case 'unique_id':
+			return property.unique_id.number;
+
+		case 'button':
+			return null; // Buttons don't have values
+
+		case 'verification':
+			return property.verification;
+
 		default:
 			return null;
 	}
 }
 
-function extractFormulaValue(formula: any): PropertyValue {
+function extractFormulaValue(formula: any): any {
 	if (!formula) return null;
 
 	switch (formula.type) {
@@ -109,7 +123,7 @@ function extractFormulaValue(formula: any): PropertyValue {
 	}
 }
 
-function extractRollupValue(rollup: any): PropertyValue {
+function extractRollupValue(rollup: any): any {
 	if (!rollup) return null;
 
 	switch (rollup.type) {
@@ -118,43 +132,88 @@ function extractRollupValue(rollup: any): PropertyValue {
 		case 'date':
 			return rollup.date?.start || null;
 		case 'array':
-			return rollup.array;
+			return rollup.array.map((item: any) => extractPropertyValue(item));
 		default:
 			return null;
 	}
 }
 
 /**
- * Simplify a Notion page object by extracting property values
+ * Extract cover URL from Notion cover object
  */
-export function simplifyPage<T = any>(page: PageObjectResponse): T {
-	const properties: ExtractedProperties = {};
+function extractCoverUrl(cover: any): string | null {
+	if (!cover) return null;
 
-	// Extract all properties
-	for (const [key, value] of Object.entries(page.properties)) {
-		properties[key] = extractPropertyValue(value);
+	if (cover.type === 'external') {
+		return cover.external?.url || null;
+	} else if (cover.type === 'file') {
+		return cover.file?.url || null;
 	}
 
-	// Return simplified page object
-	return {
-		id: page.id,
-		created_time: page.created_time,
-		last_edited_time: page.last_edited_time,
-		created_by: page.created_by,
-		last_edited_by: page.last_edited_by,
-		cover: page.cover,
-		icon: page.icon,
-		parent: page.parent,
-		archived: page.archived,
-		url: page.url,
-		public_url: page.public_url,
-		properties,
+	return null;
+}
+
+/**
+ * Extract icon URL or emoji from Notion icon object
+ */
+function extractIconUrl(icon: any): string | null {
+	if (!icon) return null;
+
+	switch (icon.type) {
+		case 'emoji':
+			return icon.emoji;
+		case 'external':
+			return icon.external?.url || null;
+		case 'file':
+			return icon.file?.url || null;
+		case 'custom_emoji':
+			return icon.custom_emoji?.url || null;
+		default:
+			return null;
+	}
+}
+
+/**
+ * Find and extract title from page properties
+ */
+function findTitle(properties: Record<string, any>): string | null {
+	// Look for any property with type 'title'
+	for (const [, prop] of Object.entries(properties)) {
+		if (prop.type === 'title' && prop.title?.length > 0) {
+			return prop.title.map((text: any) => text.plain_text).join('');
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Add convenience properties to a Notion page
+ */
+export function simplifyPage<T extends SimplifiedPage = SimplifiedPage>(page: PageObjectResponse): T {
+	const simplifiedProperties: Record<string, any> = {};
+
+	// Extract all properties to simplified form
+	for (const [key, value] of Object.entries(page.properties)) {
+		simplifiedProperties[key] = extractPropertyValue(value);
+	}
+
+	// Create the extended page object
+	const simplified = {
+		...page, // Keep all original properties
+		// Add convenience properties
+		title: findTitle(page.properties),
+		coverUrl: extractCoverUrl(page.cover),
+		iconUrl: extractIconUrl(page.icon),
+		simplifiedProperties,
 	} as T;
+
+	return simplified;
 }
 
 /**
  * Simplify multiple pages
  */
-export function simplifyPages<T = any>(pages: PageObjectResponse[]): T[] {
+export function simplifyPages<T extends SimplifiedPage = SimplifiedPage>(pages: PageObjectResponse[]): T[] {
 	return pages.map((page) => simplifyPage<T>(page));
 }
