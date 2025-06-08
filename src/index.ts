@@ -1,6 +1,7 @@
-// Main entry point for the notion-nextjs library
-export const VERSION = '0.1.0';
+// Main exports
+export { NotionNextJS } from './client';
+export * from './types';
+export { DEFAULT_CONFIG } from './config';
 
-export function hello() {
-	return 'Hello from notion-nextjs!';
-}
+// Version info
+export const VERSION = '0.1.0';
