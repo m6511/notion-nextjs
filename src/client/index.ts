@@ -4,17 +4,22 @@ import { mergeConfig, validateConfig } from '../config';
 import { simplifyPage, simplifyPages, SimplifiedPage } from '../utils/property-extractor';
 import { PageObjectResponse, DatabaseObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { CacheManager } from '../cache';
+import { ImageHandler } from '../images';
+import path from 'path';
+import fs from 'fs';
 
 export class NotionNextJS {
 	private client: Client;
 	private config: NotionNextJSRuntimeConfig;
 	private cache: CacheManager;
+	private imageHandler: ImageHandler;
 
 	constructor(auth: string, config: NotionNextJSConfig) {
 		validateConfig(config);
 		this.config = mergeConfig(config);
 		this.client = new Client({ auth });
 		this.cache = new CacheManager(this.config);
+		this.imageHandler = new ImageHandler(this.config);
 	}
 
 	// Get the underlying Notion client for direct access
@@ -30,6 +35,11 @@ export class NotionNextJS {
 	// Get cache manager
 	getCacheManager(): CacheManager {
 		return this.cache;
+	}
+
+	// Get image handler
+	getImageHandler(): ImageHandler {
+		return this.imageHandler;
 	}
 
 	// Get database ID by name
@@ -49,34 +59,45 @@ export class NotionNextJS {
 			sorts?: any;
 			simplify?: boolean;
 			useCache?: boolean;
+			processImages?: boolean;
 		}
 	): Promise<T[]> {
 		const databaseId = this.getDatabaseId(databaseName);
-		const { filter, sorts, simplify = true, useCache = true } = options || {};
+		const { filter, sorts, simplify = true, useCache = true, processImages = true } = options || {};
+
+		let pages: PageObjectResponse[] = [];
 
 		// Try to use cache if in local mode
 		if (this.config.dataSource === 'local' && useCache) {
 			const cachedPages = await this.cache.getCachedPages(databaseName);
 			if (cachedPages) {
 				console.log(`📦 Using cached data for database "${databaseName}"`);
-				return simplify ? simplifyPages<T>(cachedPages) : (cachedPages as T[]);
+				pages = cachedPages;
 			} else {
 				console.log(`⚠️  No cached data found for database "${databaseName}", falling back to live API`);
 			}
 		}
 
-		// Fetch from live API
-		console.log(`🌐 Fetching live data for database "${databaseName}"`);
-		const response = await this.client.databases.query({
-			database_id: databaseId,
-			filter,
-			sorts,
-		});
-
-		const pages = response.results as PageObjectResponse[];
+		// Fetch from live API if not cached
+		if (pages.length === 0) {
+			console.log(`🌐 Fetching live data for database "${databaseName}"`);
+			const response = await this.client.databases.query({
+				database_id: databaseId,
+				filter,
+				sorts,
+			});
+			pages = response.results as PageObjectResponse[];
+		}
 
 		if (simplify) {
-			return simplifyPages<T>(pages);
+			let simplifiedPages = simplifyPages<T>(pages);
+
+			// Process images if enabled
+			if (processImages && this.config.images.enabled) {
+				simplifiedPages = (await this.imageHandler.processPages(simplifiedPages)) as T[];
+			}
+
+			return simplifiedPages;
 		}
 
 		return pages as T[];
@@ -88,9 +109,12 @@ export class NotionNextJS {
 		options?: {
 			simplify?: boolean;
 			useCache?: boolean;
+			processImages?: boolean;
 		}
 	): Promise<T> {
-		const { simplify = true, useCache = true } = options || {};
+		const { simplify = true, useCache = true, processImages = true } = options || {};
+
+		let page: PageObjectResponse | null = null;
 
 		// Try to find in cache if in local mode
 		if (this.config.dataSource === 'local' && useCache) {
@@ -98,25 +122,37 @@ export class NotionNextJS {
 			for (const [dbName] of Object.entries(this.config.databases)) {
 				const cachedPages = await this.cache.getCachedPages(dbName);
 				if (cachedPages) {
-					const page = cachedPages.find((p) => p.id === pageId);
-					if (page) {
+					const foundPage = cachedPages.find((p) => p.id === pageId);
+					if (foundPage) {
 						console.log(`📦 Found page in cache (database: ${dbName})`);
-						return simplify ? simplifyPage<T>(page) : (page as T);
+						page = foundPage;
+						break;
 					}
 				}
 			}
-			console.log(`⚠️  Page ${pageId} not found in cache, falling back to live API`);
+			if (!page) {
+				console.log(`⚠️  Page ${pageId} not found in cache, falling back to live API`);
+			}
 		}
 
-		// Fetch from live API
-		console.log(`🌐 Fetching page ${pageId} from live API`);
-		const response = (await this.client.pages.retrieve({ page_id: pageId })) as PageObjectResponse;
+		// Fetch from live API if not cached
+		if (!page) {
+			console.log(`🌐 Fetching page ${pageId} from live API`);
+			page = (await this.client.pages.retrieve({ page_id: pageId })) as PageObjectResponse;
+		}
 
 		if (simplify) {
-			return simplifyPage<T>(response);
+			let simplifiedPage = simplifyPage<T>(page);
+
+			// Process images if enabled
+			if (processImages && this.config.images.enabled) {
+				simplifiedPage = (await this.imageHandler.processPageImages(simplifiedPage)) as T;
+			}
+
+			return simplifiedPage;
 		}
 
-		return response as T;
+		return page as T;
 	}
 
 	/**
@@ -155,6 +191,12 @@ export class NotionNextJS {
 				};
 
 				console.log(`✅ Synced ${pages.length} pages from "${name}"`);
+
+				// Process images if enabled
+				if (this.config.images.enabled) {
+					const simplifiedPages = simplifyPages(pages);
+					await this.imageHandler.processPages(simplifiedPages);
+				}
 			} catch (error: any) {
 				console.error(`❌ Failed to sync "${name}": ${error.message}`);
 			}
@@ -163,5 +205,12 @@ export class NotionNextJS {
 		// Save metadata
 		await this.cache.setMetadata(metadata);
 		console.log('\n✨ Sync complete! Cache saved to:', this.config.outputDir);
+
+		// Save image map
+		if (this.config.images.enabled) {
+			const imageMapPath = path.join(this.config.outputDir, 'image-map.json');
+			await fs.promises.writeFile(imageMapPath, JSON.stringify(this.imageHandler.getImageMap(), null, 2));
+			console.log(`📸 Image map saved to: ${imageMapPath}`);
+		}
 	}
 }
