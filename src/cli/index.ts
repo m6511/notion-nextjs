@@ -2,6 +2,10 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: '.env.local' });
+
 import { NotionNextJSConfig } from '../types';
 import { NotionNextJS } from '../client';
 import { generateTypesFile } from '../types/type-generator';
