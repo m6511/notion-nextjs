@@ -1,0 +1,45 @@
+{
+	"name": "notion-nextjs",
+	"version": "0.1.0",
+	"description": "A lightweight, type-safe Notion API wrapper for Next.js",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"test": "echo \"No tests yet\"",
+		"prepublishOnly": "npm run build"
+	},
+	"bin": {
+		"notion-nextjs": "./dist/cli.js"
+	},
+	"keywords": [
+		"notion",
+		"nextjs",
+		"next.js",
+		"cms",
+		"typescript",
+		"api"
+	],
+	"author": "Your Name",
+	"license": "MIT",
+	"peerDependencies": {
+		"next": ">=13.0.0",
+		"react": ">=18.0.0"
+	},
+	"dependencies": {
+		"@notionhq/client": "^3.1.3"
+	},
+	"devDependencies": {
+		"@types/node": "^20.19.0",
+		"tsup": "^8.5.0",
+		"typescript": "^5.8.3"
+	},
+	"engines": {
+		"node": ">=16.0.0"
+	}
+}
