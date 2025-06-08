@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
 import * as fs from 'fs';
+import * as path from 'path';
 import { NotionNextJSConfig } from '../types';
+import { NotionNextJS } from '../client';
+import { generateTypesFile } from '../types/type-generator';
 
 const CONFIG_FILENAME = 'notion.config.js';
 
@@ -15,7 +18,76 @@ function promptUser(question: string): Promise<string> {
 	});
 }
 
+async function loadConfig(): Promise<NotionNextJSConfig> {
+	const configPath = path.resolve(process.cwd(), CONFIG_FILENAME);
+
+	if (!fs.existsSync(configPath)) {
+		throw new Error(`Configuration file not found. Run "npx notion-nextjs setup" first.`);
+	}
+
+	// Clear require cache to ensure fresh config
+	delete require.cache[configPath];
+	return require(configPath);
+}
+
+async function sync() {
+	console.log('\n🔄 Syncing Notion databases...\n');
+
+	// Load configuration
+	const config = await loadConfig();
+
+	// Check for API key
+	const apiKey = process.env.NOTION_API_KEY;
+	if (!apiKey) {
+		throw new Error('NOTION_API_KEY environment variable not found. Add it to your .env.local file.');
+	}
+
+	// Initialize client
+	const notion = new NotionNextJS(apiKey, config);
+	const client = notion.getNotionClient();
+
+	// Fetch all database schemas
+	const databases = new Map();
+
+	for (const [name, databaseId] of Object.entries(config.databases)) {
+		try {
+			console.log(`📊 Fetching schema for "${name}"...`);
+			const database = await client.databases.retrieve({ database_id: databaseId });
+			databases.set(name, database);
+			console.log(`✅ Fetched schema for "${name}"`);
+		} catch (error: any) {
+			console.error(`❌ Failed to fetch "${name}": ${error.message}`);
+		}
+	}
+
+	if (databases.size === 0) {
+		throw new Error('No databases could be fetched. Check your configuration and API key.');
+	}
+
+	// Generate types file
+	console.log('\n📝 Generating TypeScript types...');
+	const typesContent = generateTypesFile(databases);
+
+	// Write types file
+	const typesDir = path.resolve(process.cwd(), 'types');
+	if (!fs.existsSync(typesDir)) {
+		fs.mkdirSync(typesDir, { recursive: true });
+	}
+
+	const typesPath = path.join(typesDir, 'notion.ts');
+	fs.writeFileSync(typesPath, typesContent);
+	console.log(`✅ Generated types at ${typesPath}`);
+
+	// TODO: Cache data if dataSource is 'local'
+	if (config.dataSource === 'local') {
+		console.log('\n📦 Local caching will be implemented in the next update!');
+	}
+
+	console.log('\n✨ Sync complete!\n');
+}
+
 async function setup() {
+	// ... previous setup code remains the same ...
 	console.log('\n🚀 Welcome to notion-nextjs setup!\n');
 
 	// Check if config already exists
@@ -58,7 +130,7 @@ async function setup() {
 	const enableImages = await promptUser('Enable image optimization? (Y/n):');
 	const useLocalCache = await promptUser('Enable local caching? (Y/n):');
 
-	// Create configuration
+	// Create configuration with local as default
 	const config: NotionNextJSConfig = {
 		databases,
 		dataSource: useLocalCache.toLowerCase() === 'n' ? 'live' : 'local',
@@ -114,13 +186,15 @@ NOTION_API_KEY=your-notion-integration-token-here
 	// Show next steps
 	console.log('\n📝 Next steps:');
 	console.log('1. Add your Notion API key to .env.local');
-	console.log('2. Import and use notion-nextjs in your project:');
+	console.log('2. Run "npx notion-nextjs sync" to generate types');
+	console.log('3. Import and use notion-nextjs in your project:');
 	console.log('\n   ```typescript');
 	console.log('   import { NotionNextJS } from "notion-nextjs";');
 	console.log('   import config from "./notion.config.js";');
+	console.log('   import type { BlogPage } from "./types/notion";');
 	console.log('');
 	console.log('   const notion = new NotionNextJS(process.env.NOTION_API_KEY!, config);');
-	console.log('   const pages = await notion.getAllPages<YourType>("blog");');
+	console.log('   const pages = await notion.getAllPages<BlogPage>("blog");');
 	console.log('   ```\n');
 
 	process.exit(0);
@@ -134,13 +208,13 @@ async function main() {
 			await setup();
 			break;
 		case 'sync':
-			console.log('Sync command coming soon!');
+			await sync();
 			break;
 		default:
 			console.log('notion-nextjs CLI\n');
 			console.log('Commands:');
 			console.log('  setup  - Initialize notion-nextjs configuration');
-			console.log('  sync   - Sync data and generate types (coming soon)');
+			console.log('  sync   - Sync data and generate types');
 			break;
 	}
 }
