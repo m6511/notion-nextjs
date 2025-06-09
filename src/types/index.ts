@@ -6,6 +6,7 @@ export interface NotionNextJSConfig {
 	dataSource?: 'local' | 'live';
 	outputDir?: string;
 	propertyNaming?: PropertyNamingConvention;
+	typesPath?: string;
 	images?: {
 		enabled?: boolean;
 		outputDir?: string;
@@ -19,6 +20,7 @@ export interface NotionNextJSRuntimeConfig extends Required<NotionNextJSConfig> 
 	dataSource: 'local' | 'live';
 	outputDir: string;
 	propertyNaming: PropertyNamingConvention;
+	typesPath: string;
 	images: {
 		enabled: boolean;
 		outputDir: string;

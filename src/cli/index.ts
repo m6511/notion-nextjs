@@ -35,7 +35,7 @@ async function loadConfig(): Promise<NotionNextJSConfig> {
 	return require(configPath);
 }
 
-async function sync() {
+async function sync(options?: { typesPath?: string }) {
 	console.log('\n🔄 Syncing Notion databases...\n');
 
 	// Load configuration
@@ -74,18 +74,21 @@ async function sync() {
 	const typesContent = generateTypesFile(databases);
 
 	// Write types file
-	const typesDir = path.resolve(process.cwd(), 'types');
+	// Determine types path (CLI option > config > default)
+	const typesPath = options?.typesPath || config.typesPath || 'types/notion.ts';
+	const resolvedTypesPath = path.resolve(process.cwd(), typesPath);
+	const typesDir = path.dirname(resolvedTypesPath);
+
 	if (!fs.existsSync(typesDir)) {
 		fs.mkdirSync(typesDir, { recursive: true });
 	}
 
-	const typesPath = path.join(typesDir, 'notion.ts');
 	fs.writeFileSync(typesPath, typesContent);
 	console.log(`✅ Generated types at ${typesPath}`);
 
 	// Cache data if configured for local data source
 	if (config.dataSource === 'local') {
-		console.log(''); // Empty line for spacing
+		console.log('');
 		await notion.syncToCache();
 	}
 
@@ -93,7 +96,6 @@ async function sync() {
 }
 
 async function setup() {
-	// ... previous setup code remains the same ...
 	console.log('\n🚀 Welcome to notion-nextjs setup!\n');
 
 	// Check if config already exists
@@ -138,12 +140,14 @@ async function setup() {
 	const propertyNaming = await promptUser(
 		'Property naming convention (camelCase/snake_case/PascalCase/none) [camelCase]:'
 	);
+	const typesPathInput = await promptUser('TypeScript types output path [types/notion.ts]:');
 
 	// Create configuration with local as default
 	const config: NotionNextJSConfig = {
 		databases,
 		dataSource: useLocalCache.toLowerCase() === 'n' ? 'live' : 'local',
 		propertyNaming: (propertyNaming || 'camelCase') as PropertyNamingConvention,
+		typesPath: typesPathInput || 'types/notion.ts',
 	};
 
 	if (enableImages.toLowerCase() !== 'n') {
@@ -168,6 +172,7 @@ async function setup() {
 	  databases: ${JSON.stringify(databases, null, 4).replace(/\n/g, '\n  ')},
 	  dataSource: '${config.dataSource}',
 	  propertyNaming: '${config.propertyNaming}',
+	  typesPath: '${config.typesPath}',
 	${config.outputDir ? `  outputDir: '${config.outputDir}',\n` : ''}${
 		config.images
 			? `  images: {
@@ -202,7 +207,7 @@ NOTION_API_KEY=your-notion-integration-token-here
 	console.log('\n   ```typescript');
 	console.log('   import { NotionNextJS } from "notion-nextjs";');
 	console.log('   import config from "./notion.config.js";');
-	console.log('   import type { BlogPage } from "./types/notion";');
+	console.log(`   import type { BlogPage } from "./${config.typesPath?.replace('.ts', '')}";`);
 	console.log('');
 	console.log('   const notion = new NotionNextJS(process.env.NOTION_API_KEY!, config);');
 	console.log('   const pages = await notion.getAllPages<BlogPage>("blog");');
@@ -212,20 +217,32 @@ NOTION_API_KEY=your-notion-integration-token-here
 }
 
 async function main() {
-	const command = process.argv[2];
+	const args = process.argv.slice(2);
+	const command = args[0];
 
 	switch (command) {
 		case 'setup':
 			await setup();
 			break;
 		case 'sync':
-			await sync();
+			const typesPathIndex = args.findIndex((arg) => arg === '--types-path' || arg === '-t');
+			const typesPath = typesPathIndex !== -1 ? args[typesPathIndex + 1] : undefined;
+
+			await sync({ typesPath });
 			break;
 		default:
 			console.log('notion-nextjs CLI\n');
 			console.log('Commands:');
-			console.log('  setup  - Initialize notion-nextjs configuration');
-			console.log('  sync   - Sync data and generate types');
+			console.log('  setup                    - Initialize notion-nextjs configuration');
+			console.log('  sync [options]           - Sync data and generate types');
+			console.log('');
+			console.log('Sync options:');
+			console.log('  --types-path, -t <path>  - Override types output path');
+			console.log('');
+			console.log('Examples:');
+			console.log('  npx notion-nextjs setup');
+			console.log('  npx notion-nextjs sync');
+			console.log('  npx notion-nextjs sync --types-path src/types/notion-types.ts');
 			break;
 	}
 }
