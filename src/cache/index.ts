@@ -33,7 +33,7 @@ export class CacheManager {
 		await fs.promises.mkdir(this.cacheDir, { recursive: true });
 
 		// Create subdirectories
-		const subdirs = ['databases', 'pages', 'images'];
+		const subdirs = ['databases', 'pages'];
 		for (const dir of subdirs) {
 			await fs.promises.mkdir(path.join(this.cacheDir, dir), { recursive: true });
 		}
@@ -98,13 +98,6 @@ export class CacheManager {
 		} catch {
 			return null;
 		}
-	}
-
-	/**
-	 * Get image cache path
-	 */
-	getImageCachePath(filename: string): string {
-		return path.join(this.cacheDir, 'images', filename);
 	}
 
 	/**
