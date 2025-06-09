@@ -4,11 +4,18 @@
 import type { SimplifiedPage } from 'notion-nextjs';
 
 export interface BlogPage extends SimplifiedPage {
-  // Override properties with specific types for this database
-  simplifiedProperties: {
-    Subtitle: string;
-    Date: string | null;
-    Status: string | null;
-    Title: string;
-  };
+	/**
+	 * Property name mapping:
+	 * - "Subtitle" → subtitle
+	 * - "Publish Date" → publishDate
+	 * - "Status" → status
+	 * - "Title" → title
+	 */
+	// Override properties with specific types for this database
+	simplifiedProperties: {
+		subtitle: string;
+		publishDate: string | null;
+		status: string | null;
+		title: string;
+	};
 }

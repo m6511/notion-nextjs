@@ -10,7 +10,7 @@ const notion = new NotionNextJS(process.env.NOTION_API_KEY!, config);
 
 export default async function Home() {
 	const posts = await notion.getAllPages<BlogPage>('blog');
-	const publishedPosts = posts.filter((post) => post.simplifiedProperties.Status === 'Published');
+	const publishedPosts = posts.filter((post) => post.simplifiedProperties.status === 'Published');
 
 	return (
 		<main className='flex min-h-screen flex-col items-center p-12 md:p-24 bg-gray-50'>
@@ -43,8 +43,8 @@ export default async function Home() {
 							)}
 							<div className='p-6'>
 								<p className='text-sm text-gray-500 mb-2'>
-									{post.simplifiedProperties.Date
-										? new Date(post.simplifiedProperties.Date).toLocaleDateString('en-US', {
+									{post.simplifiedProperties.publishDate
+										? new Date(post.simplifiedProperties.publishDate).toLocaleDateString('en-US', {
 												year: 'numeric',
 												month: 'long',
 												day: 'numeric',
@@ -52,7 +52,7 @@ export default async function Home() {
 										: ''}
 								</p>
 								<h2 className='text-3xl font-bold text-gray-900 mb-3'>{post.title}</h2>
-								<p className='text-gray-700'>{post.simplifiedProperties.Subtitle}</p>
+								<p className='text-gray-700'>{post.simplifiedProperties.subtitle}</p>
 							</div>
 						</article>
 					))}
