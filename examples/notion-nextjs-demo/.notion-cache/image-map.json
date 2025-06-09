@@ -1,0 +1,20 @@
+{
+  "https://www.notion.so/images/page-cover/woodcuts_10.jpg": {
+    "originalUrl": "https://www.notion.so/images/page-cover/woodcuts_10.jpg",
+    "localPath": "/Users/m/dev/git/notion-nextjs/examples/notion-nextjs-demo/public/images/notion/20d58a32-45d4-8035-8fc7-f996b8d2ef3a-woodcuts_10.jpg",
+    "publicPath": "/images/notion/20d58a32-45d4-8035-8fc7-f996b8d2ef3a-woodcuts_10.jpg",
+    "format": "jpg"
+  },
+  "https://www.notion.so/images/page-cover/woodcuts_15.jpg": {
+    "originalUrl": "https://www.notion.so/images/page-cover/woodcuts_15.jpg",
+    "localPath": "/Users/m/dev/git/notion-nextjs/examples/notion-nextjs-demo/public/images/notion/20d58a32-45d4-80de-98a8-c64213a88e29-woodcuts_15.jpg",
+    "publicPath": "/images/notion/20d58a32-45d4-80de-98a8-c64213a88e29-woodcuts_15.jpg",
+    "format": "jpg"
+  },
+  "https://www.notion.so/images/page-cover/woodcuts_5.jpg": {
+    "originalUrl": "https://www.notion.so/images/page-cover/woodcuts_5.jpg",
+    "localPath": "/Users/m/dev/git/notion-nextjs/examples/notion-nextjs-demo/public/images/notion/20d58a32-45d4-80f2-94da-f892fd619fe9-woodcuts_5.jpg",
+    "publicPath": "/images/notion/20d58a32-45d4-80f2-94da-f892fd619fe9-woodcuts_5.jpg",
+    "format": "jpg"
+  }
+}
