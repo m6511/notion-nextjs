@@ -1,0 +1,63 @@
+{
+	"name": "notion-nextjs",
+	"version": "0.1.0",
+	"description": "A lightweight, type-safe Notion API wrapper for Next.js applications with automatic type generation, local caching, and image optimization",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"README.md",
+		"CHANGELOG.md"
+	],
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"b": "tsup && pnpm pack",
+		"test": "echo \"No tests yet\"",
+		"prepublishOnly": "npm run build",
+		"release": "pnpm build && npm publish"
+	},
+	"bin": {
+		"notion-nextjs": "./dist/cli.js"
+	},
+	"keywords": [
+		"notion",
+		"nextjs",
+		"next.js",
+		"cms",
+		"typescript",
+		"api",
+		"headless-cms",
+		"notion-api",
+		"static-site"
+	],
+	"author": "M <f6511@pm.me>",
+	"license": "MIT",
+	"homepage": "https://github.com/m6511/notion-nextjs#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/m6511/notion-nextjs.git"
+	},
+	"bugs": {
+		"url": "https://github.com/m6511/notion-nextjs/issues"
+	},
+	"peerDependencies": {
+		"next": ">=13.0.0",
+		"react": ">=18.0.0"
+	},
+	"dependencies": {
+		"@notionhq/client": "^3.1.3",
+		"dotenv": "^16.5.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.19.0",
+		"tsup": "^8.5.0",
+		"typescript": "^5.8.3"
+	},
+	"engines": {
+		"node": ">=16.0.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}
