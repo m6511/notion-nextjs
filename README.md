@@ -68,10 +68,10 @@ export default async function BlogPage() {
 
 - [x] Next.js example
 - [x] Add property transformer
+- [x] Support custom types location
 - [ ] Add tests
 - [ ] Create docs
 - [ ] Simplify public API
-- [ ] Support custom types location
 - [ ] Markdown content support
 - [ ] Next.js ISR support
 - [ ] Static import support for next/image
