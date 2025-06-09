@@ -39,7 +39,7 @@ async function sync(options?: { typesPath?: string }) {
 	console.log('\n🔄 Syncing Notion databases...\n');
 
 	// Load configuration
-	const config = await loadConfig();
+	const userConfig = await loadConfig();
 
 	// Check for API key
 	const apiKey = process.env.NOTION_API_KEY;
@@ -47,14 +47,16 @@ async function sync(options?: { typesPath?: string }) {
 		throw new Error('NOTION_API_KEY environment variable not found. Add it to your .env.local file.');
 	}
 
-	// Initialize client
-	const notion = new NotionNextJS(apiKey, config);
+	const notion = new NotionNextJS(apiKey, userConfig);
 	const client = notion.getNotionClient();
+
+	// Get the merged config from the client
+	const mergedConfig = notion.getConfig();
 
 	// Fetch all database schemas for type generation
 	const databases = new Map();
 
-	for (const [name, databaseId] of Object.entries(config.databases)) {
+	for (const [name, databaseId] of Object.entries(mergedConfig.databases)) {
 		try {
 			console.log(`📊 Fetching schema for "${name}"...`);
 			const database = await client.databases.retrieve({ database_id: databaseId });
@@ -71,11 +73,11 @@ async function sync(options?: { typesPath?: string }) {
 
 	// Generate types file
 	console.log('\n📝 Generating TypeScript types...');
-	const typesContent = generateTypesFile(databases, config.propertyNaming);
+	const typesContent = generateTypesFile(databases, mergedConfig.propertyNaming);
 
 	// Write types file
 	// Determine types path (CLI option > config > default)
-	const typesPath = options?.typesPath || config.typesPath || 'types/notion.ts';
+	const typesPath = options?.typesPath || mergedConfig.typesPath || 'types/notion.ts';
 	const resolvedTypesPath = path.resolve(process.cwd(), typesPath);
 	const typesDir = path.dirname(resolvedTypesPath);
 
@@ -87,9 +89,11 @@ async function sync(options?: { typesPath?: string }) {
 	console.log(`✅ Generated types at ${typesPath}`);
 
 	// Cache data if configured for local data source
-	if (config.dataSource === 'local') {
-		console.log('');
+	if (mergedConfig.dataSource === 'local') {
+		console.log('🔄 Syncing to cache because dataSource is local...');
 		await notion.syncToCache();
+	} else {
+		console.log('⏭️  Skipping cache sync because dataSource is not local');
 	}
 
 	console.log('\n✨ Sync complete!\n');
