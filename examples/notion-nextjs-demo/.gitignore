@@ -31,7 +31,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env.local*
+.env*
 
 # vercel
 .vercel
@@ -39,15 +39,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.notion-cache/*
-
-
-dist/
-
-*.tgz
-
-# Example App specific
-/examples/next-app-example/.next/
-/examples/next-app-example/.env.local
-/examples/next-app-example/.notion-cache/
