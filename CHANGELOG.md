@@ -1,3 +1,10 @@
+## [0.3.1](https://github.com/m6511/notion-nextjs/compare/v0.3.0...v0.3.1) (2025-06-09)
+
+
+### Bug Fixes
+
+* include pre- and postinstall scripts for deployments. ([7f3e433](https://github.com/m6511/notion-nextjs/commit/7f3e4337debb7959129795b6387ea04cf019dce7))
+
 # [0.3.0](https://github.com/m6511/notion-nextjs/compare/v0.2.0...v0.3.0) (2025-06-09)
 
 
