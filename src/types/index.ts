@@ -1,8 +1,11 @@
+import { PropertyNamingConvention } from '../utils/property-transformer';
+
 // Configuration types
 export interface NotionNextJSConfig {
 	databases: Record<string, string>;
 	dataSource?: 'local' | 'live';
 	outputDir?: string;
+	propertyNaming?: PropertyNamingConvention;
 	images?: {
 		enabled?: boolean;
 		outputDir?: string;
@@ -15,6 +18,7 @@ export interface NotionNextJSConfig {
 export interface NotionNextJSRuntimeConfig extends Required<NotionNextJSConfig> {
 	dataSource: 'local' | 'live';
 	outputDir: string;
+	propertyNaming: PropertyNamingConvention;
 	images: {
 		enabled: boolean;
 		outputDir: string;
