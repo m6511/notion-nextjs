@@ -9,4 +9,5 @@ export { ImageHandler } from './images';
 export { transformPropertyName, type PropertyNamingConvention } from './utils/property-transformer';
 
 // Version info
-export const VERSION = '0.4.0';
+import { version } from '../package.json';
+export const VERSION = version;
