@@ -49,7 +49,7 @@
           }
         ]
       },
-      "Date": {
+      "Publish Date": {
         "id": "pg%3CK",
         "type": "date",
         "date": {
@@ -144,7 +144,7 @@
           }
         ]
       },
-      "Date": {
+      "Publish Date": {
         "id": "pg%3CK",
         "type": "date",
         "date": {
@@ -193,7 +193,7 @@
     "object": "page",
     "id": "20d58a32-45d4-80f2-94da-f892fd619fe9",
     "created_time": "2025-06-09T11:15:00.000Z",
-    "last_edited_time": "2025-06-09T11:31:00.000Z",
+    "last_edited_time": "2025-06-09T12:43:00.000Z",
     "created_by": {
       "object": "user",
       "id": "20dd872b-594c-814f-8c97-00029abd83f6"
@@ -239,11 +239,11 @@
           }
         ]
       },
-      "Date": {
+      "Publish Date": {
         "id": "pg%3CK",
         "type": "date",
         "date": {
-          "start": "2025-06-09",
+          "start": "2025-06-05",
           "end": null,
           "time_zone": null
         }

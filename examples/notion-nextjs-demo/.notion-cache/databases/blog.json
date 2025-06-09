@@ -12,7 +12,7 @@
     "object": "user",
     "id": "20dd872b-594c-814f-8c97-00029abd83f6"
   },
-  "last_edited_time": "2025-06-09T11:32:00.000Z",
+  "last_edited_time": "2025-06-09T14:53:00.000Z",
   "title": [
     {
       "type": "text",
@@ -41,9 +41,9 @@
       "type": "rich_text",
       "rich_text": {}
     },
-    "Date": {
+    "Publish Date": {
       "id": "pg%3CK",
-      "name": "Date",
+      "name": "Publish Date",
       "type": "date",
       "date": {}
     },
@@ -115,5 +115,5 @@
   "public_url": null,
   "archived": false,
   "in_trash": false,
-  "request_id": "8c2ec43b-e67d-4602-b30f-a86bd454ca1b"
+  "request_id": "8448cb20-acd2-41b7-93eb-9fc52c4d3689"
 }

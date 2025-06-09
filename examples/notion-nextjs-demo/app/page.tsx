@@ -12,6 +12,8 @@ export default async function Home() {
 	const posts = await notion.getAllPages<BlogPage>('blog');
 	const publishedPosts = posts.filter((post) => post.simplifiedProperties.status === 'Published');
 
+	console.log('publishDate: ', publishedPosts[0].simplifiedProperties.publishDate);
+
 	return (
 		<main className='flex min-h-screen flex-col items-center p-12 md:p-24 bg-gray-50'>
 			<div className='w-full max-w-4xl'>
