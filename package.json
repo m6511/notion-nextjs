@@ -14,7 +14,7 @@
 		"dev": "tsup --watch",
 		"b": "tsup && pnpm pack",
 		"test": "echo \"No tests yet\"",
-		"prepublishOnly": "npm run build",
+		"prepublishOnly": "pnpm run build",
 		"release": "pnpm build && npm publish"
 	},
 	"bin": {

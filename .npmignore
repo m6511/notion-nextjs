@@ -1,0 +1,20 @@
+# .npmignore
+
+# Source files
+src/
+tsup.config.ts
+tsconfig.json
+
+# Local configs and secrets
+.env*
+.notion-cache/
+
+# Node modules
+node_modules/
+
+# Git
+.git
+.github
+
+# Test files
+**/*.test.ts
