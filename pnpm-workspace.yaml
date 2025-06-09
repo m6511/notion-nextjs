@@ -1,5 +1,4 @@
 # pnpm-workspace.yaml
 packages:
-    - 'packages/*'
-    - '.'
-    - 'examples/*'
+  - '.'
+  - 'examples/*'
