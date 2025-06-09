@@ -11,8 +11,13 @@ const notion = new NotionNextJS(process.env.NOTION_API_KEY!, config);
 export default async function Home() {
 	const posts = await notion.getAllPages<BlogPage>('blog');
 	const publishedPosts = posts.filter((post) => post.simplifiedProperties.status === 'Published');
-
-	console.log('publishDate: ', publishedPosts[0].simplifiedProperties.publishDate);
+	const sortedPosts = publishedPosts
+		.filter((post) => post.simplifiedProperties.publishDate)
+		.sort(
+			(a, b) =>
+				new Date(b.simplifiedProperties.publishDate || '').getTime() -
+				new Date(a.simplifiedProperties.publishDate || '').getTime()
+		);
 
 	return (
 		<main className='flex min-h-screen flex-col items-center p-12 md:p-24 bg-gray-50'>
@@ -28,7 +33,7 @@ export default async function Home() {
 				</header>
 
 				<div className='grid gap-8'>
-					{publishedPosts.map((post) => (
+					{sortedPosts.map((post) => (
 						<article
 							key={post.id}
 							className='bg-white rounded-lg shadow-md overflow-hidden transition-shadow hover:shadow-xl'
