@@ -11,11 +11,22 @@ export interface BlogPage extends SimplifiedPage {
    * - "Status" → status
    * - "Title" → title
    */
-  // Override properties with specific types for this database
+ 
   simplifiedProperties: {
     subtitle: string;
     publishDate: string | null;
     status: string | null;
     title: string;
+  };
+}
+
+export interface DocsPage extends SimplifiedPage {
+  /**
+   * Property name mapping:
+   * - "Name" → name
+   */
+ 
+  simplifiedProperties: {
+    name: string;
   };
 }
