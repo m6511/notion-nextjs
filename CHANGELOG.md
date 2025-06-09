@@ -1,3 +1,19 @@
+# [0.4.0](https://github.com/m6511/notion-nextjs/compare/v0.3.1...v0.4.0) (2025-06-09)
+
+
+### Bug Fixes
+
+* use correct defaults when config is omitted ([cc88c0b](https://github.com/m6511/notion-nextjs/commit/cc88c0bd209543ca990a6a10763e4b533cfc8502))
+* use propertyNaming in types generation ([61dd500](https://github.com/m6511/notion-nextjs/commit/61dd5005700b71338ba387360f7dbe9c5373a320))
+
+
+### Features
+
+* add configurable property naming conventions ([5518166](https://github.com/m6511/notion-nextjs/commit/5518166ae8f2d533ee28d55d6991256951af1acd))
+* add property name transformation utilities ([dae28d7](https://github.com/m6511/notion-nextjs/commit/dae28d74a637ef491efc9fd7bd95101386a1a309))
+* feat: add configurable types output path ([3fe2873](https://github.com/m6511/notion-nextjs/commit/3fe2873b33511b08aa467a1445824898737ab683))
+* integrate property transformation ([ab9ad7a](https://github.com/m6511/notion-nextjs/commit/ab9ad7a3a11bc74322d45cac910ba8a944b88e3e))
+
 ## [0.3.1](https://github.com/m6511/notion-nextjs/compare/v0.3.0...v0.3.1) (2025-06-09)
 
 

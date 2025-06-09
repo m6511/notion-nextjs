@@ -1,6 +1,6 @@
 {
 	"name": "notion-nextjs",
-	"version": "0.3.1",
+	"version": "0.4.0",
 	"description": "A lightweight, type-safe Notion API wrapper for Next.js applications with automatic type generation, local caching, and image optimization",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
