@@ -6,6 +6,7 @@ export { simplifyPage, simplifyPages, type SimplifiedPage } from './utils/proper
 export { generateTypeFromDatabase, generateTypesFile } from './types/type-generator';
 export { CacheManager } from './cache';
 export { ImageHandler } from './images';
+export { transformPropertyName, type PropertyNamingConvention } from './utils/property-transformer';
 
 // Version info
-export const VERSION = '0.1.0';
+export const VERSION = '0.4.0';

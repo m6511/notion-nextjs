@@ -1,4 +1,5 @@
 import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import { PropertyNamingConvention, createPropertyMapping } from './property-transformer';
 
 export interface SimplifiedPage extends PageObjectResponse {
 	// Convenience properties
@@ -177,7 +178,6 @@ function extractIconUrl(icon: any): string | null {
  * Find and extract title from page properties
  */
 function findTitle(properties: Record<string, any>): string | null {
-	// Look for any property with type 'title'
 	for (const [, prop] of Object.entries(properties)) {
 		if (prop.type === 'title' && prop.title?.length > 0) {
 			return prop.title.map((text: any) => text.plain_text).join('');
@@ -190,12 +190,20 @@ function findTitle(properties: Record<string, any>): string | null {
 /**
  * Add convenience properties to a Notion page
  */
-export function simplifyPage<T extends SimplifiedPage = SimplifiedPage>(page: PageObjectResponse): T {
+export function simplifyPage<T extends SimplifiedPage = SimplifiedPage>(
+	page: PageObjectResponse,
+	propertyNaming: PropertyNamingConvention = 'camelCase'
+): T {
 	const simplifiedProperties: Record<string, any> = {};
 
-	// Extract all properties to simplified form
+	// Create property name mapping
+	const originalNames = Object.keys(page.properties);
+	const nameMapping = createPropertyMapping(originalNames, propertyNaming);
+
+	// Extract all properties to simplified form with transformed names
 	for (const [key, value] of Object.entries(page.properties)) {
-		simplifiedProperties[key] = extractPropertyValue(value);
+		const transformedKey = nameMapping[key];
+		simplifiedProperties[transformedKey] = extractPropertyValue(value);
 	}
 
 	// Create the extended page object
@@ -214,6 +222,9 @@ export function simplifyPage<T extends SimplifiedPage = SimplifiedPage>(page: Pa
 /**
  * Simplify multiple pages
  */
-export function simplifyPages<T extends SimplifiedPage = SimplifiedPage>(pages: PageObjectResponse[]): T[] {
-	return pages.map((page) => simplifyPage<T>(page));
+export function simplifyPages<T extends SimplifiedPage = SimplifiedPage>(
+	pages: PageObjectResponse[],
+	propertyNaming: PropertyNamingConvention = 'camelCase'
+): T[] {
+	return pages.map((page) => simplifyPage<T>(page, propertyNaming));
 }
