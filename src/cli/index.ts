@@ -71,7 +71,7 @@ async function sync(options?: { typesPath?: string }) {
 
 	// Generate types file
 	console.log('\n📝 Generating TypeScript types...');
-	const typesContent = generateTypesFile(databases);
+	const typesContent = generateTypesFile(databases, config.propertyNaming);
 
 	// Write types file
 	// Determine types path (CLI option > config > default)
