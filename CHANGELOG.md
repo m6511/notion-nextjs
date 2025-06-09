@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/m6511/notion-nextjs/compare/v0.2.0...v0.3.0) (2025-06-09)
+
+
+### Features
+
+* add example project. ([0b76fbe](https://github.com/m6511/notion-nextjs/commit/0b76fbe6f33bca116eb10118fb124eec1ec77e9c))
+
 # [0.2.0](https://github.com/m6511/notion-nextjs/compare/v0.1.0...v0.2.0) (2025-06-09)
 
 
