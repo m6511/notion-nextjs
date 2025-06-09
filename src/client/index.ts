@@ -5,8 +5,8 @@ import { simplifyPage, simplifyPages, SimplifiedPage } from '../utils/property-e
 import { PageObjectResponse, DatabaseObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { CacheManager } from '../cache';
 import { ImageHandler } from '../images';
-import path from 'path';
-import fs from 'fs';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export class NotionNextJS {
 	private client: Client;
@@ -90,7 +90,7 @@ export class NotionNextJS {
 		}
 
 		if (simplify) {
-			let simplifiedPages = simplifyPages<T>(pages);
+			let simplifiedPages = simplifyPages<T>(pages, this.config.propertyNaming);
 
 			// Process images if enabled
 			if (processImages && this.config.images.enabled) {
@@ -142,7 +142,7 @@ export class NotionNextJS {
 		}
 
 		if (simplify) {
-			let simplifiedPage = simplifyPage<T>(page);
+			let simplifiedPage = simplifyPage<T>(page, this.config.propertyNaming);
 
 			// Process images if enabled
 			if (processImages && this.config.images.enabled) {
@@ -194,7 +194,7 @@ export class NotionNextJS {
 
 				// Process images if enabled
 				if (this.config.images.enabled) {
-					const simplifiedPages = simplifyPages(pages);
+					const simplifiedPages = simplifyPages(pages, this.config.propertyNaming);
 					await this.imageHandler.processPages(simplifiedPages);
 				}
 			} catch (error: any) {

@@ -66,9 +66,9 @@ export default async function BlogPage() {
 
 ## To Do
 
-- [ ] Add tests
 - [x] Next.js example
-- [ ] Remove whitespaces from Notion property names
+- [x] Add property transformer
+- [ ] Add tests
 - [ ] Create docs
 - [ ] Simplify public API
 - [ ] Support custom types location
