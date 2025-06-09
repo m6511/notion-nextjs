@@ -10,6 +10,7 @@
 		"CHANGELOG.md"
 	],
 	"scripts": {
+		"preinstall": "npx only-allow pnpm",
 		"build": "tsup",
 		"dev": "tsup --watch",
 		"b": "tsup && pnpm pack",
