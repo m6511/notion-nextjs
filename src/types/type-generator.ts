@@ -63,7 +63,7 @@ ${Object.entries(nameMapping)
 			: '';
 
 	return `export interface ${interfaceName} extends SimplifiedPage {
-${mappingComment}  // Override properties with specific types for this database
+${mappingComment} 
   simplifiedProperties: {
 ${properties}
   };
