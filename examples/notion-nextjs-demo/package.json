@@ -5,9 +5,10 @@
 	"scripts": {
 		"dev": "next dev --turbopack",
 		"build": "next build",
+		"prebuild": "pnpm sync:notion",
+		"sync:notion": "cd ../.. && pnpm build && cd - && node ../../dist/cli.js sync",
 		"start": "next start",
-		"lint": "next lint",
-		"postinstall": "cd ../.. && pnpm build"
+		"lint": "next lint"
 	},
 	"dependencies": {
 		"react": "^19.0.0",

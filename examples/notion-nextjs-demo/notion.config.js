@@ -3,15 +3,8 @@
 
 /** @type {import('notion-nextjs').NotionNextJSConfig} */
 module.exports = {
-  databases: {
-      "blog": "20d58a3245d4804cb212e01b595be565"
-  },
-  dataSource: 'local',
-  outputDir: '.notion-cache',
-  images: {
-    enabled: true,
-    outputDir: '/public/images/notion',
-    format: 'webp',
-    quality: 85,
-  },
+	databases: {
+		blog: '20d58a3245d4804cb212e01b595be565',
+		docs: '20d58a3245d480bab442d338a821bebc',
+	},
 };
