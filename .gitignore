@@ -55,3 +55,5 @@ dist/
 # Example App notion-cache
 examples/notion-nextjs-demo/.notion-cache/
 examples/notion-nextjs-demo/public/images/notion/
+
+examples/notion-nextjs-demo/types/notion.ts
