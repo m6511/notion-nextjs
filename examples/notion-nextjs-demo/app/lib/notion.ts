@@ -7,7 +7,7 @@ import { DocsPage } from '../../types/notion.js';
 const notion = new NotionNextJS(process.env.NOTION_API_KEY!, config);
 
 // Helper function to generate slug from title
-function generateSlug(title: string): string {
+export function generateSlug(title: string): string {
 	return title
 		.toLowerCase()
 		.replace(/[^\w\s-]/g, '')
