@@ -2,14 +2,20 @@
 
 A lightweight, type-safe Notion API wrapper for Next.js applications with automatic type generation, local caching, and image optimization.
 
+## ⚠ Pre-release
+
+This project is currently in pre-release, you can use it but some features are lacking and core components are still able to change.
+
+Do not hesitate to open an issue to provide your feedback, report bugs and to propose new features.
+
 ## Features
 
-- 🚀 **Simple Setup:** Interactive CLI to get started quickly
-- 📘 **Type Safety:** Auto-generates TypeScript types from your Notion databases
-- 💾 **Local Caching:** Cache Notion data locally for faster development
-- 🖼️ **Image Optimization:** Download and optimize images from Notion
-- 🎯 **Simplified API:** Cleaner data structure than raw Notion API
-- ⚡ **Next.js Optimized:** Built for Next.js 13+ App Router
+- **Simple Setup:** Interactive CLI to get started quickly
+- **Type Safety:** Auto-generates TypeScript types from your Notion databases
+- **Local Caching:** Cache Notion data locally for faster development
+- **Image Optimization:** Download and optimize images from Notion
+- **Simplified API:** Cleaner data structure than raw Notion API
+- **Next.js Optimized:** Built for Next.js 13+ App Router
 
 ## Quick Start
 
