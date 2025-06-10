@@ -6,14 +6,14 @@ import type { SimplifiedPage } from 'notion-nextjs';
 export interface BlogPage extends SimplifiedPage {
   /**
    * Property name mapping:
-   * - "Subtitle" → subtitle
+   * - "Tags" → tags
    * - "Publish Date" → publishDate
    * - "Status" → status
    * - "Title" → title
    */
  
   simplifiedProperties: {
-    subtitle: string;
+    tags: string[];
     publishDate: string | null;
     status: string | null;
     title: string;
@@ -23,10 +23,16 @@ export interface BlogPage extends SimplifiedPage {
 export interface DocsPage extends SimplifiedPage {
   /**
    * Property name mapping:
-   * - "Name" → name
+   * - "Section" → section
+   * - "Order" → order
+   * - "Status" → status
+   * - "Title" → title
    */
  
   simplifiedProperties: {
-    name: string;
+    section: string | null;
+    order: number;
+    status: string | null;
+    title: string;
   };
 }
