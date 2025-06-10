@@ -7,6 +7,7 @@ export interface SimplifiedPage extends PageObjectResponse {
 	coverUrl: string | null;
 	iconUrl: string | null;
 	simplifiedProperties: Record<string, any>;
+	content?: string;
 }
 
 /**
