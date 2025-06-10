@@ -1,19 +1,21 @@
+import { MarkdownArticle } from '../components/markdown-article';
 import { getAllDocPages } from '../lib/notion';
 
 export default async function DocsPage() {
 	const posts = await getAllDocPages();
+	const kitchenSink = posts.find((post) => post.slug === 'kitchen-sink');
 
 	return (
-		<div>
+		<div className='container mx-auto'>
 			<h1>Docs</h1>
 			{posts.map((post) => (
-				<article key={post.id}>
+				<ul key={post.id}>
 					<a href={`/docs/${post.slug}`}>
-						<h2>{post.title}</h2>
+						<li>{post.title}</li>
 					</a>
-					<p>Section: {post.simplifiedProperties.section}</p>
-				</article>
+				</ul>
 			))}
+			<MarkdownArticle markdown={kitchenSink?.content || ''} />
 		</div>
 	);
 }
