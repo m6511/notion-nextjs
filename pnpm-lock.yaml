@@ -49,7 +49,7 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
-  examples/notion-nextjs-demo:
+  demo/notion-nextjs-demo:
     dependencies:
       '@radix-ui/react-separator':
         specifier: ^1.1.7
