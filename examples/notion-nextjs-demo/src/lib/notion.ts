@@ -1,7 +1,7 @@
 // lib/notion.ts
 import { NotionNextJS } from 'notion-nextjs';
-import config from '../../notion.config.js';
-import { DocsPage } from '../../types/notion.js';
+import config from '../../notion.config';
+import { DocsPage } from '@/types/notion.js';
 
 // Create singleton instance
 const notion = new NotionNextJS(process.env.NOTION_API_KEY!, config);

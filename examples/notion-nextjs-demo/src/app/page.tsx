@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-import { Section } from './components/section';
-import { SectionHeader } from './components/section-header';
-import { ExamplePair } from './components/example-pair';
-import { HeroSection } from './components/hero-section';
-import { getCodeExample } from './lib/code-examples';
+import { Section } from '@/components/section';
+import { SectionHeader } from '@/components/section-header';
+import { ExamplePair } from '@/components/example-pair';
+import { HeroSection } from '@/components/hero-section';
+import { getCodeExample } from '@/lib/code-examples';
 
 export default async function Home() {
 	const heroCode = await getCodeExample('hero-code');

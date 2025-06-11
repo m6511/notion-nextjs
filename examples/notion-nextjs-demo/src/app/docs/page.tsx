@@ -1,5 +1,5 @@
-import { MarkdownArticle } from '../components/markdown-article';
-import { getAllDocPages } from '../lib/notion';
+import { MarkdownArticle } from '@/components/markdown-article';
+import { getAllDocPages } from '@/lib/notion';
 
 export default async function DocsPage() {
 	const posts = await getAllDocPages();

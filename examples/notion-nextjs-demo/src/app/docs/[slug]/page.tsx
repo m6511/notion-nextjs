@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
-import { getAllDocPages, getDocsPageBySlug } from '../../lib/notion';
-import { MarkdownArticle } from '../../components/markdown-article';
+import { getAllDocPages, getDocsPageBySlug } from '@/lib/notion';
+import { MarkdownArticle } from '@/components/markdown-article';
 
 interface Props {
 	params: { slug: string };
