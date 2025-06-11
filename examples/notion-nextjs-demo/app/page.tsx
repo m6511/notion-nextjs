@@ -1,69 +1,72 @@
-// examples/next-app-example/app/page.tsx
-
-import Image from 'next/image';
-import { NotionNextJS } from 'notion-nextjs';
-import config from '../notion.config.js';
-import type { BlogPage } from '../types/notion';
 import Link from 'next/link';
-
-const notion = new NotionNextJS(process.env.NOTION_API_KEY!, config);
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
+import { Section } from './components/section';
+import { SectionHeader } from './components/section-header';
+import { ExamplePair } from './components/example-pair';
+import { HeroSection } from './components/hero-section';
+import { getCodeExample } from './lib/code-examples';
 
 export default async function Home() {
-	const posts = await notion.getAllPages<BlogPage>('blog');
-	const publishedPosts = posts.filter((post) => post.simplifiedProperties.status === 'Published');
-	const sortedPosts = publishedPosts
-		.filter((post) => post.simplifiedProperties.publishDate)
-		.sort(
-			(a, b) =>
-				new Date(b.simplifiedProperties.publishDate || '').getTime() -
-				new Date(a.simplifiedProperties.publishDate || '').getTime()
-		);
-
+	const heroCode = await getCodeExample('hero-code');
+	const schemaTypesCode = await getCodeExample('schema-types');
+	const fetchFilterCode = await getCodeExample('fetch-filter');
+	const apiResponseCode = await getCodeExample('api-response');
 	return (
-		<main className='flex min-h-screen flex-col items-center p-12 md:p-24 bg-gray-50'>
-			<div className='w-full max-w-4xl'>
-				<header className='text-center mb-12'>
-					<h1 className='text-5xl font-bold text-gray-800'>My Notion Blog</h1>
-					<Link href={`https://github.com/m6511/notion-nextjs`}>
-						<div className='text-lg text-gray-600 mt-4'>
-							Powered by{' '}
-							<code className='bg-gray-200 p-1 rounded hover:underline hover:text-sky-700'>notion-nextjs</code>
-						</div>
-					</Link>
-				</header>
+		<main className='min-h-screen'>
+			<HeroSection code={heroCode} />
 
-				<div className='grid gap-8'>
-					{sortedPosts.map((post) => (
-						<article
-							key={post.id}
-							className='bg-white rounded-lg shadow-md overflow-hidden transition-shadow hover:shadow-xl'
-						>
-							{post.coverUrl && (
-								<div className='relative w-full h-64'>
-									<Image
-										src={post.coverUrl}
-										alt={post.title || 'Blog post cover image'}
-										fill
-										className='object-cover'
-									/>
-								</div>
-							)}
-							<div className='p-6'>
-								<p className='text-sm text-gray-500 mb-2'>
-									{post.simplifiedProperties.publishDate
-										? new Date(post.simplifiedProperties.publishDate).toLocaleDateString('en-US', {
-												year: 'numeric',
-												month: 'long',
-												day: 'numeric',
-										  })
-										: ''}
-								</p>
-								<h2 className='text-3xl font-bold text-gray-900 mb-3'>{post.title}</h2>
-							</div>
-						</article>
-					))}
+			<Section>
+				<SectionHeader
+					title='From Notion database to type-safe code'
+					description='See how notion-nextjs transforms your Notion databases into powerful, type-safe APIs with automatic code generation.'
+				/>
+
+				<div className='space-y-16'>
+					<ExamplePair
+						leftTitle='Your Notion Database'
+						leftDescription='Design your content structure in Notion with properties like title, publish date, status, and tags.'
+						rightTitle='Auto-Generated Types'
+						rightDescription='notion-nextjs automatically generates TypeScript interfaces from your database schema.'
+						code={schemaTypesCode}
+						filename='types/blog.ts'
+					/>
+
+					<ExamplePair
+						leftTitle='Rich Content Management'
+						leftDescription='Manage your blog posts, filter by status, organize with tags, and set publish dates.'
+						rightTitle='Type-Safe Queries'
+						rightDescription='Fetch and filter your content with full TypeScript support and IntelliSense.'
+						code={fetchFilterCode}
+						filename='lib/blog.ts'
+					/>
+
+					<ExamplePair
+						leftTitle='Complex Properties'
+						leftDescription="Use Notion's rich property types: relations, formulas, rollups, and more."
+						rightTitle='Simplified API Response'
+						rightDescription='Get clean, predictable JSON responses with simplified property access.'
+						code={apiResponseCode}
+						filename='response.json'
+						language='json'
+					/>
 				</div>
-			</div>
+			</Section>
+
+			<Section>
+				<div className='text-center'>
+					<h2 className='text-3xl font-bold text-foreground mb-4'>Ready to get started?</h2>
+					<p className='text-lg text-muted-foreground mb-8'>
+						Transform your Notion workspace into a powerful CMS in minutes.
+					</p>
+					<Button size='lg' asChild>
+						<Link href='/docs' className='flex items-center gap-2'>
+							Read the docs
+							<ArrowRight className='w-4 h-4' />
+						</Link>
+					</Button>
+				</div>
+			</Section>
 		</main>
 	);
 }
