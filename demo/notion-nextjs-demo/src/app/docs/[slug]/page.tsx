@@ -3,7 +3,7 @@ import { getAllDocPages, getDocsPageBySlug } from '@/lib/notion';
 import { MarkdownArticle } from '@/components/markdown-article';
 
 interface Props {
-	params: { slug: string };
+	params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
@@ -14,7 +14,8 @@ export async function generateStaticParams() {
 	}));
 }
 
-export default async function DocsPage({ params }: Props) {
+export default async function DocsPage({ params: paramsPromise }: Props) {
+	const params = await paramsPromise;
 	const page = await getDocsPageBySlug(params.slug);
 
 	console.log(page);

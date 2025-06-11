@@ -12,7 +12,13 @@ interface Props {
 	className?: string;
 }
 
-const HeadingWithAnchor = ({ level, children, ...props }: any) => {
+interface HeadingProps {
+	level: number;
+	children?: React.ReactNode;
+	[key: string]: unknown;
+}
+
+const HeadingWithAnchor = ({ level, children, ...props }: HeadingProps) => {
 	const Tag = `h${level}` as keyof JSX.IntrinsicElements;
 	const text = String(children);
 	const slug = generateSlug(text);
@@ -42,10 +48,10 @@ export function MarkdownArticle({ markdown, className = '' }: Props) {
 					h1: (props) => <HeadingWithAnchor level={1} {...props} />,
 					h2: (props) => <HeadingWithAnchor level={2} {...props} />,
 					h3: (props) => <HeadingWithAnchor level={3} {...props} />,
-					code({ node, className, children, ...props }) {
+					code({ className, children, ...props }) {
 						const match = /language-(\w+)/.exec(className || '');
 						return match ? (
-							//@ts-expect-error
+							// @ts-expect-error SyntaxHighlighter has incorrect type definitions
 							<SyntaxHighlighter style={tomorrow} language={match[1]} PreTag='div' {...props}>
 								{String(children).replace(/\n$/, '')}
 							</SyntaxHighlighter>

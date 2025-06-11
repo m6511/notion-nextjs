@@ -4,7 +4,7 @@ interface CodeBlockProps {
 	language?: string;
 }
 
-export function CodeBlock({ code, filename, language = 'typescript' }: CodeBlockProps) {
+export function CodeBlock({ code, filename }: CodeBlockProps) {
 	return (
 		<div className='bg-card border border-border rounded-lg overflow-hidden h-96'>
 			{filename && (

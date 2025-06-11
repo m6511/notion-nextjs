@@ -21,7 +21,7 @@ export function ExamplePair({
 	leftDescription,
 	rightTitle,
 	rightDescription,
-	notionUrl = 'https://www.notion.so/embed/20d58a3245d480bab442d338a821bebc',
+	// notionUrl = 'https://www.notion.so/embed/20d58a3245d480bab442d338a821bebc',
 	code,
 	filename,
 	language = 'typescript',
