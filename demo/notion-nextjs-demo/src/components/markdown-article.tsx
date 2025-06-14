@@ -10,7 +10,7 @@ import remarkGfm from 'remark-gfm';
 import { useTheme } from 'next-themes';
 import { generateSlug } from '../lib/slug';
 
-import { JSX } from 'react';
+import { JSX, useState, useEffect } from 'react';
 import { Link } from 'lucide-react';
 
 interface Props {
@@ -34,11 +34,11 @@ const HeadingWithAnchor = ({ level, children, ...props }: HeadingProps) => {
 			{children}
 			<a
 				href={`#${slug}`}
-				className='absolute top-0 -left-6 opacity-0 transition-opacity group-hover:opacity-100'
+				className='absolute top-2 -left-6 opacity-0 transition-opacity group-hover:opacity-100'
 				aria-label={`Link to ${text}`}
 			>
 				<Link
-					size={16}
+					size={14}
 					className='text-muted-foreground hover:text-foreground'
 				/>
 			</a>
@@ -47,9 +47,14 @@ const HeadingWithAnchor = ({ level, children, ...props }: HeadingProps) => {
 };
 
 export function MarkdownArticle({ markdown, className = '' }: Props) {
+	const [mounted, setMounted] = useState(false);
 	const { theme, systemTheme } = useTheme();
 	const currentTheme = theme === 'system' ? systemTheme : theme;
 	const isDark = currentTheme === 'dark';
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	return (
 		<div
@@ -66,7 +71,7 @@ export function MarkdownArticle({ markdown, className = '' }: Props) {
 						return match ? (
 							<SyntaxHighlighter
 								// @ts-expect-error SyntaxHighlighter has incorrect type definitions
-								style={isDark ? oneDark : oneLight}
+								style={mounted && isDark ? oneDark : oneLight}
 								language={match[1]}
 								PreTag='div'
 								customStyle={{

@@ -4,12 +4,11 @@ import { MarkdownArticle } from '@/components/markdown-article';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
-	BreadcrumbLink,
 	BreadcrumbList,
-	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
+import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import DocsSidebar from '@/components/docs-sidebar';
@@ -62,6 +61,9 @@ export default async function DocsPage({ params: paramsPromise }: Props) {
 								</button>
 							</SheetTrigger>
 							<SheetContent side='left' className='w-64 p-0'>
+								<VisuallyHidden>
+									<SheetTitle>Navigation Menu</SheetTitle>
+								</VisuallyHidden>
 								<div className='p-6'>
 									<DocsSidebar docPages={allPages} />
 								</div>
