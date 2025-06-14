@@ -97,10 +97,9 @@ export default async function DocsPage({ params: paramsPromise }: Props) {
 				</header>
 
 				{/* Article Body */}
-				<div className='bg-card rounded-lg'>
-					<div className='prose prose-neutral dark:prose-invert max-w-none'>
-						<MarkdownArticle markdown={page.content || ''} />
-					</div>
+
+				<div className='prose prose-neutral dark:prose-invert max-w-none'>
+					<MarkdownArticle markdown={page.content || ''} />
 				</div>
 
 				{/* Next Page Navigation */}

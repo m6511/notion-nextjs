@@ -2,8 +2,12 @@
 
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { tomorrow } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import {
+	oneLight,
+	oneDark,
+} from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import remarkGfm from 'remark-gfm';
+import { useTheme } from 'next-themes';
 import { generateSlug } from '../lib/slug';
 
 import { JSX } from 'react';
@@ -43,9 +47,13 @@ const HeadingWithAnchor = ({ level, children, ...props }: HeadingProps) => {
 };
 
 export function MarkdownArticle({ markdown, className = '' }: Props) {
+	const { theme, systemTheme } = useTheme();
+	const currentTheme = theme === 'system' ? systemTheme : theme;
+	const isDark = currentTheme === 'dark';
+
 	return (
 		<div
-			className={`prose prose-neutral dark:prose-invert prose-code:!outline-0 prose-pre:!bg-transparent prose-pre:!p-0 prose-pre:!m-0 [&_pre>div]:!bg-card [&_pre>div]:border-border max-w-none [&_pre>div]:rounded-lg [&_pre>div]:border ${className}`}
+			className={`prose prose-neutral dark:prose-invert prose-code:!outline-0 prose-pre:!bg-transparent prose-pre:!p-0 prose-pre:!m-0 max-w-none ${className}`}
 		>
 			<ReactMarkdown
 				remarkPlugins={[remarkGfm]}
@@ -58,14 +66,13 @@ export function MarkdownArticle({ markdown, className = '' }: Props) {
 						return match ? (
 							<SyntaxHighlighter
 								// @ts-expect-error SyntaxHighlighter has incorrect type definitions
-								style={tomorrow}
+								style={isDark ? oneDark : oneLight}
 								language={match[1]}
 								PreTag='div'
 								customStyle={{
-									background: 'transparent',
-									padding: '1rem',
 									margin: 0,
 									borderRadius: '0.5rem',
+									border: '1px solid var(--border)',
 								}}
 								{...props}
 							>
