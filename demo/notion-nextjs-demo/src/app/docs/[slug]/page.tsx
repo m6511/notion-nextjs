@@ -51,7 +51,7 @@ export default async function DocsPage({ params: paramsPromise }: Props) {
 	return (
 		<>
 			{/* Sticky Breadcrumbs with Mobile Menu */}
-			<div className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-16 z-10 mb-6 -mx-6 border-b px-6 py-4 backdrop-blur lg:static lg:border-0 lg:bg-transparent lg:p-0'>
+			<div className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-16 z-10 -mx-6 mb-6 border-b px-6 py-4 backdrop-blur lg:static lg:border-0 lg:bg-transparent lg:p-0'>
 				<div className='flex items-center gap-4'>
 					{/* Mobile Menu Button */}
 					<div className='lg:hidden'>
@@ -68,33 +68,27 @@ export default async function DocsPage({ params: paramsPromise }: Props) {
 							</SheetContent>
 						</Sheet>
 					</div>
-					
+
 					{/* Breadcrumbs */}
 					<Breadcrumb>
 						<BreadcrumbList>
-							<BreadcrumbItem>
-								<BreadcrumbLink asChild>
-									<Link href='/docs'>Documentation</Link>
-								</BreadcrumbLink>
-							</BreadcrumbItem>
+							<BreadcrumbItem>Documentation</BreadcrumbItem>
 							{page.simplifiedProperties.section && (
 								<>
 									<BreadcrumbSeparator />
 									<BreadcrumbItem>
-										<BreadcrumbLink asChild>
-											<Link href={`/docs/${page.simplifiedProperties.section}`}>
-												{page.simplifiedProperties.section}
-											</Link>
-										</BreadcrumbLink>
+										{page.simplifiedProperties.section}
 									</BreadcrumbItem>
 								</>
 							)}
-							<BreadcrumbSeparator />
-							<BreadcrumbItem>
-								<BreadcrumbPage className='text-muted-foreground'>
-									{page.simplifiedProperties.title}
-								</BreadcrumbPage>
-							</BreadcrumbItem>
+							{page.simplifiedProperties.title && (
+								<>
+									<BreadcrumbSeparator />
+									<BreadcrumbItem>
+										{page.simplifiedProperties.title}
+									</BreadcrumbItem>
+								</>
+							)}
 						</BreadcrumbList>
 					</Breadcrumb>
 				</div>
