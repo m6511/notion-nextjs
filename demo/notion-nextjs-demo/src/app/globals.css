@@ -130,6 +130,9 @@
 	* {
 		@apply border-border outline-ring/50;
 	}
+	html {
+		scroll-behavior: smooth;
+	}
 	body {
 		@apply bg-background text-foreground;
 	}
@@ -160,5 +163,14 @@
 	}
 	.prose th {
 		@apply bg-muted;
+	}
+	/* Scroll margin for anchor links to account for sticky navigation */
+	.prose h1,
+	.prose h2,
+	.prose h3,
+	.prose h4,
+	.prose h5,
+	.prose h6 {
+		scroll-margin-top: 6rem; /* Account for sticky navigation */
 	}
 }
