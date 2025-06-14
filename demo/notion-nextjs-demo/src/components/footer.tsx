@@ -5,15 +5,21 @@ export function Footer() {
 	// TODO: Footer at the bottom of the page (body screen height-footer)
 
 	return (
-		<footer className='bg-slate-950 dark:bg-slate-950 border-t border-slate-800 dark:border-slate-800'>
-			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'>
-				<div className='flex flex-col sm:flex-row justify-between items-center gap-4 text-sm'>
+		<footer className='border-t border-slate-800 bg-slate-950 dark:border-slate-800 dark:bg-slate-950'>
+			<div className='mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8'>
+				<div className='flex flex-col items-center justify-between gap-4 text-sm sm:flex-row'>
 					{/* Left side - Navigation Links */}
 					<div className='flex items-center gap-6 text-slate-400'>
-						<Link href='/docs' className='hover:text-slate-200 transition-colors'>
+						<Link
+							href='/docs'
+							className='transition-colors hover:text-slate-200'
+						>
 							Docs
 						</Link>
-						<Link href='/examples/blog' className='hover:text-slate-200 transition-colors'>
+						<Link
+							href='/examples/blog'
+							className='transition-colors hover:text-slate-200'
+						>
 							Examples
 						</Link>
 					</div>
@@ -24,7 +30,7 @@ export function Footer() {
 							href='https://github.com/m6511/notion-nextjs'
 							target='_blank'
 							rel='noopener noreferrer'
-							className='hover:text-slate-200 transition-colors'
+							className='transition-colors hover:text-slate-200'
 						>
 							GitHub
 						</Link>
@@ -33,7 +39,7 @@ export function Footer() {
 							href='https://www.npmjs.com/package/notion-nextjs'
 							target='_blank'
 							rel='noopener noreferrer'
-							className='hover:text-slate-200 text-slate-500 transition-colors'
+							className='text-slate-500 transition-colors hover:text-slate-200'
 						>
 							v0.4.0
 						</Link>

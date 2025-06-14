@@ -55,14 +55,16 @@ export default async function Home() {
 
 			<Section>
 				<div className='text-center'>
-					<h2 className='text-3xl font-bold text-foreground mb-4'>Ready to get started?</h2>
-					<p className='text-lg text-muted-foreground mb-8'>
+					<h2 className='text-foreground mb-4 text-3xl font-bold'>
+						Ready to get started?
+					</h2>
+					<p className='text-muted-foreground mb-8 text-lg'>
 						Transform your Notion workspace into a powerful CMS in minutes.
 					</p>
 					<Button size='lg' asChild>
 						<Link href='/docs' className='flex items-center gap-2'>
 							Read the docs
-							<ArrowRight className='w-4 h-4' />
+							<ArrowRight className='h-4 w-4' />
 						</Link>
 					</Button>
 				</div>

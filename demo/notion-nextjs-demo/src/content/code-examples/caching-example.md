@@ -1,9 +1,9 @@
 ```typescript
 // Cached requests
-const posts = await notion.getAllPages('blog')
+const posts = await notion.getAllPages('blog');
 // Automatically cached ⚡
 
 // Manual cache control
-await notion.clearCache()
-await notion.syncContent()
+await notion.clearCache();
+await notion.syncContent();
 ```

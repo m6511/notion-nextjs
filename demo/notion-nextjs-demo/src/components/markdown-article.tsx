@@ -28,7 +28,7 @@ const HeadingWithAnchor = ({ level, children, ...props }: HeadingProps) => {
 			{children}
 			<a
 				href={`#${slug}`}
-				className='absolute -left-6 top-0 opacity-0 group-hover:opacity-100 transition-opacity'
+				className='absolute top-0 -left-6 opacity-0 transition-opacity group-hover:opacity-100'
 				aria-label={`Link to ${text}`}
 			>
 				<Link size={16} className='text-gray-400 hover:text-gray-600' />
@@ -40,7 +40,7 @@ const HeadingWithAnchor = ({ level, children, ...props }: HeadingProps) => {
 export function MarkdownArticle({ markdown, className = '' }: Props) {
 	return (
 		<div
-			className={`prose max-w-none prose-code:!outline-0 prose-pre:!bg-transparent prose-pre:!p-0 prose-pre:!m-0 [&_pre>div]:rounded-lg ${className}`}
+			className={`prose prose-code:!outline-0 prose-pre:!bg-transparent prose-pre:!p-0 prose-pre:!m-0 max-w-none [&_pre>div]:rounded-lg ${className}`}
 		>
 			<ReactMarkdown
 				remarkPlugins={[remarkGfm]}
@@ -51,8 +51,13 @@ export function MarkdownArticle({ markdown, className = '' }: Props) {
 					code({ className, children, ...props }) {
 						const match = /language-(\w+)/.exec(className || '');
 						return match ? (
-							// @ts-expect-error SyntaxHighlighter has incorrect type definitions
-							<SyntaxHighlighter style={tomorrow} language={match[1]} PreTag='div' {...props}>
+							<SyntaxHighlighter
+								// @ts-expect-error SyntaxHighlighter has incorrect type definitions
+								style={tomorrow}
+								language={match[1]}
+								PreTag='div'
+								{...props}
+							>
 								{String(children).replace(/\n$/, '')}
 							</SyntaxHighlighter>
 						) : (

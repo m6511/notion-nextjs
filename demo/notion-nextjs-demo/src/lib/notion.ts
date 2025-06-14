@@ -40,12 +40,16 @@ export async function getAllDocPages(): Promise<DocsPageWithSlug[]> {
 	})) as DocsPageWithSlug[];
 }
 
-export async function getDocsPageBySlug(slug: string): Promise<DocsPageWithSlug | null> {
+export async function getDocsPageBySlug(
+	slug: string
+): Promise<DocsPageWithSlug | null> {
 	const pages = await getAllDocPages();
 	return pages.find((page) => page.slug === slug) || null;
 }
 
-export async function getDocsPageById(pageId: string): Promise<DocsPageWithSlug> {
+export async function getDocsPageById(
+	pageId: string
+): Promise<DocsPageWithSlug> {
 	const page = await notion.getPage(pageId);
 	return {
 		...page,
