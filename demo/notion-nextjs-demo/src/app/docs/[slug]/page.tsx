@@ -9,7 +9,10 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Menu } from 'lucide-react';
 import Link from 'next/link';
+import DocsSidebar from '@/components/docs-sidebar';
 
 interface Props {
 	params: Promise<{ slug: string }>;
@@ -47,35 +50,54 @@ export default async function DocsPage({ params: paramsPromise }: Props) {
 
 	return (
 		<>
-			{/* Breadcrumbs */}
-			<div className='mb-6'>
-				<Breadcrumb>
-					<BreadcrumbList>
-						<BreadcrumbItem>
-							<BreadcrumbLink asChild>
-								<Link href='/docs'>Documentation</Link>
-							</BreadcrumbLink>
-						</BreadcrumbItem>
-						{page.simplifiedProperties.section && (
-							<>
-								<BreadcrumbSeparator />
-								<BreadcrumbItem>
-									<BreadcrumbLink asChild>
-										<Link href={`/docs/${page.simplifiedProperties.section}`}>
-											{page.simplifiedProperties.section}
-										</Link>
-									</BreadcrumbLink>
-								</BreadcrumbItem>
-							</>
-						)}
-						<BreadcrumbSeparator />
-						<BreadcrumbItem>
-							<BreadcrumbPage className='text-muted-foreground'>
-								{page.simplifiedProperties.title}
-							</BreadcrumbPage>
-						</BreadcrumbItem>
-					</BreadcrumbList>
-				</Breadcrumb>
+			{/* Sticky Breadcrumbs with Mobile Menu */}
+			<div className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-16 z-10 mb-6 -mx-6 border-b px-6 py-4 backdrop-blur lg:static lg:border-0 lg:bg-transparent lg:p-0'>
+				<div className='flex items-center gap-4'>
+					{/* Mobile Menu Button */}
+					<div className='lg:hidden'>
+						<Sheet>
+							<SheetTrigger asChild>
+								<button className='text-muted-foreground hover:text-foreground flex items-center gap-1 text-sm'>
+									<Menu className='h-4 w-4' />
+								</button>
+							</SheetTrigger>
+							<SheetContent side='left' className='w-64 p-0'>
+								<div className='p-6'>
+									<DocsSidebar docPages={allPages} />
+								</div>
+							</SheetContent>
+						</Sheet>
+					</div>
+					
+					{/* Breadcrumbs */}
+					<Breadcrumb>
+						<BreadcrumbList>
+							<BreadcrumbItem>
+								<BreadcrumbLink asChild>
+									<Link href='/docs'>Documentation</Link>
+								</BreadcrumbLink>
+							</BreadcrumbItem>
+							{page.simplifiedProperties.section && (
+								<>
+									<BreadcrumbSeparator />
+									<BreadcrumbItem>
+										<BreadcrumbLink asChild>
+											<Link href={`/docs/${page.simplifiedProperties.section}`}>
+												{page.simplifiedProperties.section}
+											</Link>
+										</BreadcrumbLink>
+									</BreadcrumbItem>
+								</>
+							)}
+							<BreadcrumbSeparator />
+							<BreadcrumbItem>
+								<BreadcrumbPage className='text-muted-foreground'>
+									{page.simplifiedProperties.title}
+								</BreadcrumbPage>
+							</BreadcrumbItem>
+						</BreadcrumbList>
+					</Breadcrumb>
+				</div>
 			</div>
 
 			{/* Article Content */}
