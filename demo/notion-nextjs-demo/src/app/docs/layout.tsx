@@ -11,8 +11,8 @@ const DocsLayout = async ({ children }: { children: React.ReactNode }) => {
 			<div className='mx-auto max-w-7xl px-6 lg:px-8'>
 				<div className='flex gap-8'>
 					{/* Fixed Sidebar - Hidden on mobile, stops before footer */}
-					<aside className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-20 z-30 hidden h-[calc(100vh-8rem)] w-64 shrink-0 overflow-y-auto rounded-lg backdrop-blur lg:block'>
-						<div className='p-6'>
+					<aside className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-20 z-30 hidden w-64 shrink-0 self-start overflow-y-auto rounded-lg backdrop-blur lg:block'>
+						<div className='max-h-[calc(100vh-6rem)] overflow-y-auto p-6'>
 							<DocsSidebarWrapper docPages={docPages} />
 						</div>
 					</aside>

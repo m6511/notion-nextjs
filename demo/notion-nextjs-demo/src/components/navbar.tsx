@@ -15,7 +15,7 @@ export function Navbar() {
 
 					<div className='flex items-center space-x-4'>
 						<Link
-							href='/docs'
+							href='/docs/installation'
 							className='text-muted-foreground hover:text-foreground font-medium transition-colors'
 						>
 							Docs
