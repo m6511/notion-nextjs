@@ -1,36 +1,33 @@
 import Link from 'next/link';
 
 export function Footer() {
-	// TODO: Consistent height
-	// TODO: Footer at the bottom of the page (body screen height-footer)
-
 	return (
-		<footer className='border-t border-slate-800 bg-slate-950 dark:border-slate-800 dark:bg-slate-950'>
+		<footer className='border-border bg-background z-50 border-t'>
 			<div className='mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8'>
 				<div className='flex flex-col items-center justify-between gap-4 text-sm sm:flex-row'>
 					{/* Left side - Navigation Links */}
-					<div className='flex items-center gap-6 text-slate-400'>
+					<div className='text-muted-foreground flex items-center gap-6'>
 						<Link
 							href='/docs'
-							className='transition-colors hover:text-slate-200'
+							className='hover:text-foreground transition-colors'
 						>
 							Docs
 						</Link>
 						<Link
 							href='/examples/blog'
-							className='transition-colors hover:text-slate-200'
+							className='hover:text-foreground transition-colors'
 						>
 							Examples
 						</Link>
 					</div>
 
 					{/* Right side - GitHub and Version */}
-					<div className='flex items-center gap-6 text-slate-400'>
+					<div className='text-muted-foreground flex items-center gap-6'>
 						<Link
 							href='https://github.com/m6511/notion-nextjs'
 							target='_blank'
 							rel='noopener noreferrer'
-							className='transition-colors hover:text-slate-200'
+							className='hover:text-foreground transition-colors'
 						>
 							GitHub
 						</Link>
@@ -39,7 +36,7 @@ export function Footer() {
 							href='https://www.npmjs.com/package/notion-nextjs'
 							target='_blank'
 							rel='noopener noreferrer'
-							className='text-slate-500 transition-colors hover:text-slate-200'
+							className='text-muted-foreground/75 hover:text-foreground transition-colors'
 						>
 							v0.4.0
 						</Link>

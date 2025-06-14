@@ -2,18 +2,10 @@
 import { NotionNextJS } from 'notion-nextjs';
 import config from '../../notion.config';
 import { DocsPage } from '@/types/notion.js';
+import { generateSlug } from './slug';
 
 // Create singleton instance
 const notion = new NotionNextJS(process.env.NOTION_API_KEY!, config);
-
-// Helper function to generate slug from title
-export function generateSlug(title: string): string {
-	return title
-		.toLowerCase()
-		.replace(/[^\w\s-]/g, '')
-		.replace(/[\s_-]+/g, '-')
-		.replace(/^-+|-+$/g, '');
-}
 
 // MARK- Docs Section
 export interface DocsPageWithSlug extends DocsPage {

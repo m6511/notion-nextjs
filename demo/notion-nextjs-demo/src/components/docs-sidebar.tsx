@@ -1,22 +1,8 @@
 'use client';
 
-import { ChevronRight, FileText } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-import {
-	Sidebar,
-	SidebarContent,
-	SidebarGroup,
-	SidebarGroupContent,
-	SidebarGroupLabel,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
-	SidebarMenuSub,
-	SidebarMenuSubButton,
-	SidebarMenuSubItem,
-} from '@/components/ui/sidebar';
 import {
 	Collapsible,
 	CollapsibleContent,
@@ -56,49 +42,48 @@ export default function DocsSidebar({ docPages }: DocsSidebarProps) {
 	});
 
 	return (
-		<Sidebar className='top-16 h-[calc(100vh-4rem)]'>
-			<SidebarContent>
-				<SidebarGroup>
-					<SidebarGroupLabel>Documentation</SidebarGroupLabel>
-					<SidebarGroupContent>
-						<SidebarMenu>
-							{Object.entries(groupedPages).map(([section, pages]) => (
-								<Collapsible
-									key={section}
-									defaultOpen
-									className='group/collapsible'
-								>
-									<SidebarMenuItem>
-										<CollapsibleTrigger asChild>
-											<SidebarMenuButton className='w-full justify-between'>
-												<span>{section}</span>
-												<ChevronRight className='ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90' />
-											</SidebarMenuButton>
-										</CollapsibleTrigger>
-										<CollapsibleContent>
-											<SidebarMenuSub>
-												{pages.map((page) => (
-													<SidebarMenuSubItem key={page.id}>
-														<SidebarMenuSubButton
-															asChild
-															isActive={currentSlug === page.slug}
-														>
-															<Link href={`/docs/${page.slug}`}>
-																<FileText className='mr-2 h-4 w-4' />
-																{page.simplifiedProperties.title}
-															</Link>
-														</SidebarMenuSubButton>
-													</SidebarMenuSubItem>
-												))}
-											</SidebarMenuSub>
-										</CollapsibleContent>
-									</SidebarMenuItem>
-								</Collapsible>
-							))}
-						</SidebarMenu>
-					</SidebarGroupContent>
-				</SidebarGroup>
-			</SidebarContent>
-		</Sidebar>
+		<nav className='space-y-1'>
+			<div className='mb-6'>
+				<h2 className='text-foreground mb-4 text-lg font-semibold'>
+					Documentation
+				</h2>
+				<div className='space-y-2'>
+					{Object.entries(groupedPages).map(([section, pages]) => {
+						// Check if current page is in this section to keep it open
+						const isCurrentSection = pages.some(
+							(page) => page.slug === currentSlug
+						);
+
+						return (
+							<Collapsible key={section} defaultOpen={isCurrentSection}>
+								<CollapsibleTrigger className='hover:bg-muted flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-medium'>
+									<span>{section}</span>
+									<ChevronDown className='h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180' />
+								</CollapsibleTrigger>
+								<CollapsibleContent className='pb-2'>
+									<div className='border-border ml-3 space-y-1 border-l pl-3'>
+										{pages.map((page) => (
+											<Link
+												key={page.id}
+												href={`/docs/${page.slug}`}
+												className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
+													currentSlug === page.slug
+														? 'bg-primary/10 text-primary border-primary/20 border'
+														: 'text-muted-foreground hover:text-foreground hover:bg-muted'
+												}`}
+											>
+												<span className='truncate'>
+													{page.simplifiedProperties.title}
+												</span>
+											</Link>
+										))}
+									</div>
+								</CollapsibleContent>
+							</Collapsible>
+						);
+					})}
+				</div>
+			</div>
+		</nav>
 	);
 }

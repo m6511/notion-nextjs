@@ -133,4 +133,32 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+	/* Ensure better contrast for prose elements in dark mode */
+	.prose {
+		@apply text-foreground;
+	}
+	.prose h1,
+	.prose h2,
+	.prose h3,
+	.prose h4,
+	.prose h5,
+	.prose h6 {
+		@apply text-foreground;
+	}
+	.prose strong {
+		@apply text-foreground font-semibold;
+	}
+	.prose blockquote {
+		@apply border-l-border text-muted-foreground;
+	}
+	.prose table {
+		@apply border-border;
+	}
+	.prose th,
+	.prose td {
+		@apply border-border;
+	}
+	.prose th {
+		@apply bg-muted;
+	}
 }

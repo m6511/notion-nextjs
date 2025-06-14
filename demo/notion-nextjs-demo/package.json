@@ -10,6 +10,7 @@
 		"sync:notion": "cd ../.. && pnpm build && cd - && node ../../dist/cli.js sync",
 		"start": "next start",
 		"lint": "next lint",
+		"typecheck": "tsc --noEmit",
 		"format": "prettier src/ --write ."
 	},
 	"dependencies": {

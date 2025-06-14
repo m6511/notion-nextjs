@@ -29,11 +29,11 @@ export default function RootLayout({
 	return (
 		<html lang='en' suppressHydrationWarning>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col antialiased`}
 			>
 				<ThemeProvider defaultTheme='dark'>
 					<Navbar />
-					{children}
+					<div className='flex-grow'>{children}</div>
 					<Footer />
 				</ThemeProvider>
 			</body>

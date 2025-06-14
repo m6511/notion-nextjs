@@ -1,8 +1,10 @@
+'use client';
+
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import remarkGfm from 'remark-gfm';
-import { generateSlug } from '../lib/notion';
+import { generateSlug } from '../lib/slug';
 
 import { JSX } from 'react';
 import { Link } from 'lucide-react';
@@ -31,7 +33,10 @@ const HeadingWithAnchor = ({ level, children, ...props }: HeadingProps) => {
 				className='absolute top-0 -left-6 opacity-0 transition-opacity group-hover:opacity-100'
 				aria-label={`Link to ${text}`}
 			>
-				<Link size={16} className='text-gray-400 hover:text-gray-600' />
+				<Link
+					size={16}
+					className='text-muted-foreground hover:text-foreground'
+				/>
 			</a>
 		</Tag>
 	);
@@ -40,7 +45,7 @@ const HeadingWithAnchor = ({ level, children, ...props }: HeadingProps) => {
 export function MarkdownArticle({ markdown, className = '' }: Props) {
 	return (
 		<div
-			className={`prose prose-code:!outline-0 prose-pre:!bg-transparent prose-pre:!p-0 prose-pre:!m-0 max-w-none [&_pre>div]:rounded-lg ${className}`}
+			className={`prose prose-neutral dark:prose-invert prose-code:!outline-0 prose-pre:!bg-transparent prose-pre:!p-0 prose-pre:!m-0 [&_pre>div]:!bg-card [&_pre>div]:border-border max-w-none [&_pre>div]:rounded-lg [&_pre>div]:border ${className}`}
 		>
 			<ReactMarkdown
 				remarkPlugins={[remarkGfm]}
@@ -56,12 +61,21 @@ export function MarkdownArticle({ markdown, className = '' }: Props) {
 								style={tomorrow}
 								language={match[1]}
 								PreTag='div'
+								customStyle={{
+									background: 'transparent',
+									padding: '1rem',
+									margin: 0,
+									borderRadius: '0.5rem',
+								}}
 								{...props}
 							>
 								{String(children).replace(/\n$/, '')}
 							</SyntaxHighlighter>
 						) : (
-							<code className={className} {...props}>
+							<code
+								className={`${className} bg-muted rounded px-1.5 py-0.5 font-mono text-sm`}
+								{...props}
+							>
 								{children}
 							</code>
 						);
