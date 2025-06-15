@@ -5,6 +5,7 @@ import { simplifyPage, simplifyPages, SimplifiedPage } from '../utils/property-e
 import { PageObjectResponse, DatabaseObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { CacheManager } from '../cache';
 import { ImageHandler } from '../images';
+import { ContentHandler } from '../content';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -13,6 +14,7 @@ export class NotionNextJS {
 	private config: NotionNextJSRuntimeConfig;
 	private cache: CacheManager;
 	private imageHandler: ImageHandler;
+	private contentHandler: ContentHandler;
 
 	constructor(auth: string, config: NotionNextJSConfig) {
 		validateConfig(config);
@@ -20,6 +22,7 @@ export class NotionNextJS {
 		this.client = new Client({ auth });
 		this.cache = new CacheManager(this.config);
 		this.imageHandler = new ImageHandler(this.config);
+		this.contentHandler = new ContentHandler(this.client, this.config);
 	}
 
 	// Get the underlying Notion client for direct access
@@ -42,6 +45,11 @@ export class NotionNextJS {
 		return this.imageHandler;
 	}
 
+	// Get content handler
+	getContentHandler(): ContentHandler {
+		return this.contentHandler;
+	}
+
 	// Get database ID by name
 	getDatabaseId(name: string): string {
 		const id = this.config.databases[name];
@@ -60,10 +68,18 @@ export class NotionNextJS {
 			simplify?: boolean;
 			useCache?: boolean;
 			processImages?: boolean;
+			includeContent?: boolean;
 		}
 	): Promise<T[]> {
 		const databaseId = this.getDatabaseId(databaseName);
-		const { filter, sorts, simplify = true, useCache = true, processImages = true } = options || {};
+		const {
+			filter,
+			sorts,
+			simplify = true,
+			useCache = true,
+			processImages = true,
+			includeContent = true,
+		} = options || {};
 
 		let pages: PageObjectResponse[] = [];
 
@@ -97,6 +113,16 @@ export class NotionNextJS {
 				simplifiedPages = (await this.imageHandler.processPages(simplifiedPages)) as T[];
 			}
 
+			if (includeContent) {
+				await this.contentHandler.init();
+				for (const page of simplifiedPages) {
+					const content = await this.contentHandler.getPageContent(page.id, options?.useCache);
+					if (content) {
+						(page as any).content = content;
+					}
+				}
+			}
+
 			return simplifiedPages;
 		}
 
@@ -110,9 +136,10 @@ export class NotionNextJS {
 			simplify?: boolean;
 			useCache?: boolean;
 			processImages?: boolean;
+			includeContent?: boolean;
 		}
 	): Promise<T> {
-		const { simplify = true, useCache = true, processImages = true } = options || {};
+		const { simplify = true, useCache = true, processImages = true, includeContent = true } = options || {};
 
 		let page: PageObjectResponse | null = null;
 
@@ -149,6 +176,14 @@ export class NotionNextJS {
 				simplifiedPage = (await this.imageHandler.processPageImages(simplifiedPage)) as T;
 			}
 
+			if (includeContent) {
+				await this.contentHandler.init();
+				const content = await this.contentHandler.getPageContent(pageId, options?.useCache);
+				if (content) {
+					(simplifiedPage as any).content = content;
+				}
+			}
+
 			return simplifiedPage;
 		}
 
@@ -161,8 +196,9 @@ export class NotionNextJS {
 	async syncToCache(): Promise<void> {
 		console.log('🔄 Starting sync to local cache...\n');
 
-		// Initialize cache directory
+		// Initialize cache directory and content handler
 		await this.cache.init();
+		await this.contentHandler.init();
 
 		const metadata = {
 			version: '1.0.0',
@@ -189,6 +225,14 @@ export class NotionNextJS {
 					name: CacheManager.extractDatabaseTitle(database),
 					lastSync: new Date().toISOString(),
 				};
+
+				console.log(`📝 Caching content for ${pages.length} pages...`);
+				for (const page of pages) {
+					const content = await this.contentHandler.getPageContent(page.id, false);
+					if (content) {
+						await this.contentHandler.cachePageContent(page.id, content);
+					}
+				}
 
 				console.log(`✅ Synced ${pages.length} pages from "${name}"`);
 
