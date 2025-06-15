@@ -1,4 +1,6 @@
-# pnpm-workspace.yaml
 packages:
-  - '.'
-  - 'demo/*'
+  - .
+  - demo/*
+
+overrides:
+  refractor@3.6.0>prismjs: ^1.30.0
