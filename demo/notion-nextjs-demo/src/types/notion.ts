@@ -4,35 +4,35 @@
 import type { SimplifiedPage } from 'notion-nextjs';
 
 export interface BlogPage extends SimplifiedPage {
-  /**
-   * Property name mapping:
-   * - "Tags" → tags
-   * - "Publish Date" → publishDate
-   * - "Status" → status
-   * - "Title" → title
-   */
- 
-  simplifiedProperties: {
-    tags: string[];
-    publishDate: string | null;
-    status: string | null;
-    title: string;
-  };
+	/**
+	 * Property name mapping:
+	 * - "Tags" → tags
+	 * - "Publish Date" → publishDate
+	 * - "Status" → status
+	 * - "Title" → title
+	 */
+
+	simplifiedProperties: {
+		tags: string[];
+		publishDate: string | null;
+		status: string | null;
+		title: string;
+	};
 }
 
 export interface DocsPage extends SimplifiedPage {
-  /**
-   * Property name mapping:
-   * - "Section" → section
-   * - "Order" → order
-   * - "Status" → status
-   * - "Title" → title
-   */
- 
-  simplifiedProperties: {
-    section: string | null;
-    order: number;
-    status: string | null;
-    title: string;
-  };
+	/**
+	 * Property name mapping:
+	 * - "Section" → section
+	 * - "Order" → order
+	 * - "Status" → status
+	 * - "Title" → title
+	 */
+
+	simplifiedProperties: {
+		section: string | null;
+		order: number;
+		status: string | null;
+		title: string;
+	};
 }

@@ -7,7 +7,7 @@ export const VisuallyHidden = React.forwardRef<
 	return (
 		<span
 			ref={ref}
-			className="absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0 clip-[rect(0,0,0,0)]"
+			className='clip-[rect(0,0,0,0)] absolute -m-px h-px w-px overflow-hidden border-0 p-0 whitespace-nowrap'
 			{...props}
 		/>
 	);

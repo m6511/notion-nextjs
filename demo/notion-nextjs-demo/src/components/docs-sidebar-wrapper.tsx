@@ -7,6 +7,8 @@ interface DocsSidebarWrapperProps {
 	docPages: DocsPageWithSlug[];
 }
 
-export default function DocsSidebarWrapper({ docPages }: DocsSidebarWrapperProps) {
+export default function DocsSidebarWrapper({
+	docPages,
+}: DocsSidebarWrapperProps) {
 	return <DocsSidebar docPages={docPages} />;
 }
