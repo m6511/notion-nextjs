@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { VERSION } from '@/lib/version';
 
 export function Footer() {
 	return (
@@ -38,7 +39,7 @@ export function Footer() {
 							rel='noopener noreferrer'
 							className='text-muted-foreground/75 hover:text-foreground transition-colors'
 						>
-							v0.4.0
+							v{VERSION}
 						</Link>
 					</div>
 				</div>
