@@ -72,7 +72,7 @@ export default async function BlogPage() {
 }
 ```
 
-[ → Read the docs](https://docs.notion-nextjs.com) for complete documentation, examples, and API reference.
+[ → Read the docs](https://notion-nextjs-demo.vercel.app/docs/installation) for complete documentation, examples, and API reference.
 
 ## To Do
 
