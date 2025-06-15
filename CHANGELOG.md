@@ -1,3 +1,23 @@
+# [0.5.0](https://github.com/m6511/notion-nextjs/compare/v0.4.0...v0.5.0) (2025-06-15)
+
+
+### Bug Fixes
+
+* improve code block readability with predefined syntax highlighting themes ([90c7ab8](https://github.com/m6511/notion-nextjs/commit/90c7ab81712d3ae7235d7465e2405ec9eb4d8b68))
+* improve sidebar stability and reduce flickering ([94e67bb](https://github.com/m6511/notion-nextjs/commit/94e67bbbded9082fc96aaf4c5aafbb9ee04eb1a2))
+* resolve accessibility and hydration issues in docs navigation ([b12f0c0](https://github.com/m6511/notion-nextjs/commit/b12f0c04293333f200d1521d09f4027a52e00db8))
+* resolve build errors. ([376d604](https://github.com/m6511/notion-nextjs/commit/376d604134398e596bfa97c118de4b36a1ae3ffe))
+* resolve security vulnerabilities in dependencies ([36f88ee](https://github.com/m6511/notion-nextjs/commit/36f88ee2ba27088b18a0cc574b35d75ec8c121d8))
+
+
+### Features
+
+* add smooth scrolling and proper anchor positioning ([469bc3c](https://github.com/m6511/notion-nextjs/commit/469bc3cbb6acd375210ff9268dd4a4ea3672d39f))
+* **demo:** render markdown with react-markdown. ([06c0164](https://github.com/m6511/notion-nextjs/commit/06c0164c5e9b69e4383df122c8696e1547f42426))
+* fetch page content as markdown with notion-to-md ([c2a0d76](https://github.com/m6511/notion-nextjs/commit/c2a0d768a842ee5583517c59546e4a440041eb6f))
+* implement comprehensive docs sidebar with navigation features ([6dd10d2](https://github.com/m6511/notion-nextjs/commit/6dd10d2268a43813b469eb9f1d8a6d958eba5ff7))
+* integrate mobile menu with sticky breadcrumbs ([f9b947c](https://github.com/m6511/notion-nextjs/commit/f9b947ca7146e79569bfb20f08fc60adf4a07362))
+
 # [0.4.0](https://github.com/m6511/notion-nextjs/compare/v0.3.1...v0.4.0) (2025-06-09)
 
 
