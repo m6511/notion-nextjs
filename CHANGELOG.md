@@ -1,3 +1,10 @@
+## [0.5.1](https://github.com/m6511/notion-nextjs/compare/v0.5.0...v0.5.1) (2025-06-15)
+
+
+### Bug Fixes
+
+* sync demo footer version with package.json ([b53538b](https://github.com/m6511/notion-nextjs/commit/b53538b834825cc9789c45840c655a870623140f))
+
 # [0.5.0](https://github.com/m6511/notion-nextjs/compare/v0.4.0...v0.5.0) (2025-06-15)
 
 
