@@ -8,6 +8,10 @@ This project is currently in pre-release, you can use it but some features are l
 
 Do not hesitate to open an issue to provide your feedback, report bugs and to propose new features.
 
+## 🤖 Disclaimer
+
+This is a test project to evaluate Claude Code's capabilities. Significant portions of the codebase, documentation, and demo implementation have been generated or improved with AI assistance from Claude Code.
+
 ## Features
 
 - **Simple Setup:** Interactive CLI to get started quickly
@@ -75,10 +79,10 @@ export default async function BlogPage() {
 - [x] Next.js example
 - [x] Add property transformer
 - [x] Support custom types location
+- [x] Create docs
+- [x] Markdown content support
 - [ ] Add tests
-- [ ] Create docs
 - [ ] Simplify public API
-- [ ] Markdown content support
 - [ ] Next.js ISR support
 - [ ] Static import support for next/image
 - [ ] Webp image optimization

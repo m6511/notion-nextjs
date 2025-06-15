@@ -48,12 +48,16 @@ dist/
 *.tgz
 
 # Example App specific
-/examples/next-app-example/.next/
-/examples/next-app-example/.env.local
-/examples/next-app-example/.notion-cache/
-
-# Example App notion-cache
+examples/next-app-example/.next/
+examples/next-app-example/.env.local
+examples/next-app-example/.notion-cache/
 examples/notion-nextjs-demo/.notion-cache/
 examples/notion-nextjs-demo/public/images/notion/
-
 examples/notion-nextjs-demo/types/notion.ts
+
+demo/next-app-example/.next/
+demo/next-app-example/.env.local
+demo/next-app-example/.notion-cache/
+demo/notion-nextjs-demo/.notion-cache/
+demo/notion-nextjs-demo/public/images/notion/
+demo/notion-nextjs-demo/types/notion.ts
