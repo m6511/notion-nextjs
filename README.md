@@ -86,5 +86,5 @@ export default async function BlogPage() {
 - [ ] Next.js ISR support
 - [ ] Static import support for next/image
 - [x] Webp image optimization
-- [ ] Option to disable icon downloading
+- [x] Option to disable icon downloading
 - [x] Option to disable the console logs
