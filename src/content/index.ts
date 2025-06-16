@@ -3,15 +3,18 @@ import { Client } from '@notionhq/client';
 import * as fs from 'fs';
 import * as path from 'path';
 import { NotionNextJSRuntimeConfig } from '../types';
+import { Logger } from '../utils/logger';
 
 export class ContentHandler {
 	private n2m: NotionToMarkdown;
 	private config: NotionNextJSRuntimeConfig;
 	private contentDir: string;
+	private logger: Logger;
 
-	constructor(client: Client, config: NotionNextJSRuntimeConfig) {
+	constructor(client: Client, config: NotionNextJSRuntimeConfig, logger: Logger) {
 		this.n2m = new NotionToMarkdown({ notionClient: client });
 		this.config = config;
+		this.logger = logger;
 		this.contentDir = path.join(process.cwd(), config.outputDir, 'content');
 	}
 
@@ -33,7 +36,7 @@ export class ContentHandler {
 			const markdown = this.n2m.toMarkdownString(mdblocks);
 			return markdown.parent;
 		} catch (error) {
-			console.error(`Failed to get content for page ${pageId}:`, error);
+			this.logger.error(`Failed to get content for page ${pageId}:`, error);
 			return null;
 		}
 	}

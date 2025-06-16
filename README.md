@@ -74,6 +74,25 @@ export default async function BlogPage() {
 
 [ → Read the docs](https://notion-nextjs-demo.vercel.app/docs/installation) for complete documentation, examples, and API reference.
 
+## Configuration
+
+### Verbose Logging
+
+By default, notion-nextjs displays helpful console messages during data fetching and syncing. You can disable these logs by setting `verbose: false` in your configuration:
+
+```javascript
+// notion.config.js
+module.exports = {
+  databases: {
+    blog: 'your-database-id'
+  },
+  verbose: false, // Disable console logs
+  // ... other options
+};
+```
+
+**Note:** Error messages are always displayed regardless of the verbose setting for debugging purposes.
+
 ## To Do
 
 - [x] Next.js example
@@ -87,4 +106,4 @@ export default async function BlogPage() {
 - [ ] Static import support for next/image
 - [ ] Webp image optimization
 - [ ] Option to disable icon downloading
-- [ ] Option to disable the console logs
+- [x] Option to disable the console logs

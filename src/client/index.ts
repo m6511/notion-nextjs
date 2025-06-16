@@ -6,6 +6,7 @@ import { PageObjectResponse, DatabaseObjectResponse } from '@notionhq/client/bui
 import { CacheManager } from '../cache';
 import { ImageHandler } from '../images';
 import { ContentHandler } from '../content';
+import { Logger } from '../utils/logger';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -15,14 +16,16 @@ export class NotionNextJS {
 	private cache: CacheManager;
 	private imageHandler: ImageHandler;
 	private contentHandler: ContentHandler;
+	private logger: Logger;
 
 	constructor(auth: string, config: NotionNextJSConfig) {
 		validateConfig(config);
 		this.config = mergeConfig(config);
 		this.client = new Client({ auth });
-		this.cache = new CacheManager(this.config);
-		this.imageHandler = new ImageHandler(this.config);
-		this.contentHandler = new ContentHandler(this.client, this.config);
+		this.logger = new Logger(this.config.verbose);
+		this.cache = new CacheManager(this.config, this.logger);
+		this.imageHandler = new ImageHandler(this.config, this.logger);
+		this.contentHandler = new ContentHandler(this.client, this.config, this.logger);
 	}
 
 	// Get the underlying Notion client for direct access
@@ -87,16 +90,16 @@ export class NotionNextJS {
 		if (this.config.dataSource === 'local' && useCache) {
 			const cachedPages = await this.cache.getCachedPages(databaseName);
 			if (cachedPages) {
-				console.log(`📦 Using cached data for database "${databaseName}"`);
+				this.logger.log(`📦 Using cached data for database "${databaseName}"`);
 				pages = cachedPages;
 			} else {
-				console.log(`⚠️  No cached data found for database "${databaseName}", falling back to live API`);
+				this.logger.log(`⚠️  No cached data found for database "${databaseName}", falling back to live API`);
 			}
 		}
 
 		// Fetch from live API if not cached
 		if (pages.length === 0) {
-			console.log(`🌐 Fetching live data for database "${databaseName}"`);
+			this.logger.log(`🌐 Fetching live data for database "${databaseName}"`);
 			const response = await this.client.databases.query({
 				database_id: databaseId,
 				filter,
@@ -151,20 +154,20 @@ export class NotionNextJS {
 				if (cachedPages) {
 					const foundPage = cachedPages.find((p) => p.id === pageId);
 					if (foundPage) {
-						console.log(`📦 Found page in cache (database: ${dbName})`);
+						this.logger.log(`📦 Found page in cache (database: ${dbName})`);
 						page = foundPage;
 						break;
 					}
 				}
 			}
 			if (!page) {
-				console.log(`⚠️  Page ${pageId} not found in cache, falling back to live API`);
+				this.logger.log(`⚠️  Page ${pageId} not found in cache, falling back to live API`);
 			}
 		}
 
 		// Fetch from live API if not cached
 		if (!page) {
-			console.log(`🌐 Fetching page ${pageId} from live API`);
+			this.logger.log(`🌐 Fetching page ${pageId} from live API`);
 			page = (await this.client.pages.retrieve({ page_id: pageId })) as PageObjectResponse;
 		}
 
@@ -194,7 +197,7 @@ export class NotionNextJS {
 	 * Sync all databases and their pages to local cache
 	 */
 	async syncToCache(): Promise<void> {
-		console.log('🔄 Starting sync to local cache...\n');
+		this.logger.log('🔄 Starting sync to local cache...\n');
 
 		// Initialize cache directory and content handler
 		await this.cache.init();
@@ -209,7 +212,7 @@ export class NotionNextJS {
 		// Sync each database
 		for (const [name, databaseId] of Object.entries(this.config.databases)) {
 			try {
-				console.log(`📊 Syncing database "${name}"...`);
+				this.logger.log(`📊 Syncing database "${name}"...`);
 
 				// Fetch and cache database schema
 				const database = (await this.client.databases.retrieve({ database_id: databaseId })) as DatabaseObjectResponse;
@@ -226,7 +229,7 @@ export class NotionNextJS {
 					lastSync: new Date().toISOString(),
 				};
 
-				console.log(`📝 Caching content for ${pages.length} pages...`);
+				this.logger.log(`📝 Caching content for ${pages.length} pages...`);
 				for (const page of pages) {
 					const content = await this.contentHandler.getPageContent(page.id, false);
 					if (content) {
@@ -234,7 +237,7 @@ export class NotionNextJS {
 					}
 				}
 
-				console.log(`✅ Synced ${pages.length} pages from "${name}"`);
+				this.logger.log(`✅ Synced ${pages.length} pages from "${name}"`);
 
 				// Process images if enabled
 				if (this.config.images.enabled) {
@@ -242,19 +245,19 @@ export class NotionNextJS {
 					await this.imageHandler.processPages(simplifiedPages);
 				}
 			} catch (error: any) {
-				console.error(`❌ Failed to sync "${name}": ${error.message}`);
+				this.logger.error(`❌ Failed to sync "${name}": ${error.message}`);
 			}
 		}
 
 		// Save metadata
 		await this.cache.setMetadata(metadata);
-		console.log('\n✨ Sync complete! Cache saved to:', this.config.outputDir);
+		this.logger.log('\n✨ Sync complete! Cache saved to:', this.config.outputDir);
 
 		// Save image map
 		if (this.config.images.enabled) {
 			const imageMapPath = path.join(this.config.outputDir, 'image-map.json');
 			await fs.promises.writeFile(imageMapPath, JSON.stringify(this.imageHandler.getImageMap(), null, 2));
-			console.log(`📸 Image map saved to: ${imageMapPath}`);
+			this.logger.log(`📸 Image map saved to: ${imageMapPath}`);
 		}
 	}
 }

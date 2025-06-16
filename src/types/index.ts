@@ -7,6 +7,7 @@ export interface NotionNextJSConfig {
 	outputDir?: string;
 	propertyNaming?: PropertyNamingConvention;
 	typesPath?: string;
+	verbose?: boolean;
 	images?: {
 		enabled?: boolean;
 		outputDir?: string;
@@ -21,6 +22,7 @@ export interface NotionNextJSRuntimeConfig extends Required<NotionNextJSConfig> 
 	outputDir: string;
 	propertyNaming: PropertyNamingConvention;
 	typesPath: string;
+	verbose: boolean;
 	images: {
 		enabled: boolean;
 		outputDir: string;

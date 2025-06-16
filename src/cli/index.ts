@@ -10,6 +10,7 @@ import { NotionNextJSConfig } from '../types';
 import { NotionNextJS } from '../client';
 import { generateTypesFile } from '../types/type-generator';
 import { PropertyNamingConvention } from '../utils/property-transformer';
+import { Logger } from '../utils/logger';
 
 const CONFIG_FILENAME = 'notion.config.js';
 
@@ -52,18 +53,19 @@ async function sync(options?: { typesPath?: string }) {
 
 	// Get the merged config from the client
 	const mergedConfig = notion.getConfig();
+	const logger = new Logger(mergedConfig.verbose);
 
 	// Fetch all database schemas for type generation
 	const databases = new Map();
 
 	for (const [name, databaseId] of Object.entries(mergedConfig.databases)) {
 		try {
-			console.log(`📊 Fetching schema for "${name}"...`);
+			logger.log(`📊 Fetching schema for "${name}"...`);
 			const database = await client.databases.retrieve({ database_id: databaseId });
 			databases.set(name, database);
-			console.log(`✅ Fetched schema for "${name}"`);
+			logger.log(`✅ Fetched schema for "${name}"`);
 		} catch (error: any) {
-			console.error(`❌ Failed to fetch "${name}": ${error.message}`);
+			logger.error(`❌ Failed to fetch "${name}": ${error.message}`);
 		}
 	}
 
@@ -72,7 +74,7 @@ async function sync(options?: { typesPath?: string }) {
 	}
 
 	// Generate types file
-	console.log('\n📝 Generating TypeScript types...');
+	logger.log('\n📝 Generating TypeScript types...');
 	const typesContent = generateTypesFile(databases, mergedConfig.propertyNaming);
 
 	// Write types file
@@ -86,17 +88,17 @@ async function sync(options?: { typesPath?: string }) {
 	}
 
 	fs.writeFileSync(typesPath, typesContent);
-	console.log(`✅ Generated types at ${typesPath}`);
+	logger.log(`✅ Generated types at ${typesPath}`);
 
 	// Cache data if configured for local data source
 	if (mergedConfig.dataSource === 'local') {
-		console.log('🔄 Syncing to cache because dataSource is local...');
+		logger.log('🔄 Syncing to cache because dataSource is local...');
 		await notion.syncToCache();
 	} else {
-		console.log('⏭️  Skipping cache sync because dataSource is not local');
+		logger.log('⏭️  Skipping cache sync because dataSource is not local');
 	}
 
-	console.log('\n✨ Sync complete!\n');
+	logger.log('\n✨ Sync complete!\n');
 }
 
 async function setup() {
@@ -141,6 +143,7 @@ async function setup() {
 	// Ask about additional options
 	const enableImages = await promptUser('Enable image optimization? (Y/n):');
 	const useLocalCache = await promptUser('Enable local caching? (Y/n):');
+	const verboseMode = await promptUser('Enable verbose logging? (Y/n):');
 	const propertyNaming = await promptUser(
 		'Property naming convention (camelCase/snake_case/PascalCase/none) [camelCase]:'
 	);
@@ -152,6 +155,7 @@ async function setup() {
 		dataSource: useLocalCache.toLowerCase() === 'n' ? 'live' : 'local',
 		propertyNaming: (propertyNaming || 'camelCase') as PropertyNamingConvention,
 		typesPath: typesPathInput || 'types/notion.ts',
+		verbose: verboseMode.toLowerCase() !== 'n',
 	};
 
 	if (enableImages.toLowerCase() !== 'n') {
@@ -177,6 +181,7 @@ async function setup() {
 	  dataSource: '${config.dataSource}',
 	  propertyNaming: '${config.propertyNaming}',
 	  typesPath: '${config.typesPath}',
+	  verbose: ${config.verbose},
 	${config.outputDir ? `  outputDir: '${config.outputDir}',\n` : ''}${
 		config.images
 			? `  images: {

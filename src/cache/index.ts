@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { PageObjectResponse, DatabaseObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { NotionNextJSRuntimeConfig } from '../types';
+import { Logger } from '../utils/logger';
 
 export interface CacheMetadata {
 	version: string;
@@ -19,10 +20,12 @@ export interface CacheMetadata {
 export class CacheManager {
 	private cacheDir: string;
 	private metadataPath: string;
+	private logger: Logger;
 
-	constructor(config: NotionNextJSRuntimeConfig) {
+	constructor(config: NotionNextJSRuntimeConfig, logger?: Logger) {
 		this.cacheDir = path.resolve(process.cwd(), config.outputDir);
 		this.metadataPath = path.join(this.cacheDir, 'metadata.json');
+		this.logger = logger || new Logger(true);
 	}
 
 	/**
@@ -119,7 +122,7 @@ export class CacheManager {
 		try {
 			await fs.promises.rm(this.cacheDir, { recursive: true, force: true });
 		} catch (error) {
-			console.error('Failed to clear cache:', error);
+			this.logger.error('Failed to clear cache:', error);
 		}
 	}
 
