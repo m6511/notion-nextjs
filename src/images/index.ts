@@ -230,8 +230,8 @@ export class ImageHandler {
 			}
 		}
 
-		// Process icon if it's a URL
-		if (page.iconUrl && page.iconUrl.startsWith('http')) {
+		// Process icon if it's a URL and icon downloading is enabled
+		if (page.iconUrl && page.iconUrl.startsWith('http') && !this.config.images.disableIconDownload) {
 			const imageInfo = await this.processImage(page.iconUrl, {
 				pageId: page.id,
 				type: 'icon',

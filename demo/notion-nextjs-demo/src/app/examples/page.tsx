@@ -20,6 +20,12 @@ export default function ExamplesPage() {
 			href: '/examples/webp-test',
 			description: 'Showcases automatic WebP image conversion and optimization, comparing file sizes and formats side by side.',
 			tags: ['Images', 'Performance', 'WebP']
+		},
+		{
+			title: 'Disable Icon Download',
+			href: '/examples/disable-icon-download',
+			description: 'Demonstrates how to disable icon downloads for faster sync times and reduced bandwidth usage.',
+			tags: ['Configuration', 'Images', 'Performance']
 		}
 	];
 

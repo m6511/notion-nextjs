@@ -13,6 +13,7 @@ export interface NotionNextJSConfig {
 		outputDir?: string;
 		format?: 'webp' | 'original';
 		quality?: number;
+		disableIconDownload?: boolean;
 	};
 }
 
@@ -28,6 +29,7 @@ export interface NotionNextJSRuntimeConfig extends Required<NotionNextJSConfig> 
 		outputDir: string;
 		format: 'webp' | 'original';
 		quality: number;
+		disableIconDownload: boolean;
 	};
 }
 

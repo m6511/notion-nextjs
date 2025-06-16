@@ -13,6 +13,7 @@ export const DEFAULT_CONFIG: NotionNextJSRuntimeConfig = {
 		outputDir: '/public/images/notion',
 		format: 'webp',
 		quality: 85,
+		disableIconDownload: false,
 	},
 };
 
