@@ -15,6 +15,6 @@ module.exports = {
 		enabled: true,
 		outputDir: '/public/images/notion',
 		format: 'webp',
-		quality: 85,
+		quality: 80,
 	},
 };

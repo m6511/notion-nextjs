@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as https from 'https';
 import * as http from 'http';
+import sharp from 'sharp';
 import { NotionNextJSRuntimeConfig } from '../types';
 import { SimplifiedPage } from '../utils/property-extractor';
 import { Logger } from '../utils/logger';
@@ -84,13 +85,38 @@ export class ImageHandler {
 			filename = `${pageId}-${filename}`;
 		}
 
-		// Ensure proper extension
-		const ext = path.extname(filename);
-		if (!ext) {
-			filename += '.jpg'; // Default extension
+		// Handle extension based on format setting
+		if (this.config.images.format === 'webp') {
+			// Remove existing extension and add .webp
+			const nameWithoutExt = path.parse(filename).name;
+			filename = `${nameWithoutExt}.webp`;
+		} else {
+			// Ensure proper extension for original format
+			const ext = path.extname(filename);
+			if (!ext) {
+				filename += '.jpg'; // Default extension
+			}
 		}
 
 		return filename;
+	}
+
+	/**
+	 * Convert image to webp format
+	 */
+	private async convertToWebp(inputPath: string, outputPath: string): Promise<void> {
+		try {
+			await sharp(inputPath)
+				.webp({ quality: this.config.images.quality })
+				.toFile(outputPath);
+			
+			// Remove the original file after successful conversion
+			await fs.promises.unlink(inputPath);
+		} catch (error) {
+			this.logger.error(`Failed to convert image to webp: ${error}`);
+			// If conversion fails, keep the original file
+			throw error;
+		}
 	}
 
 	/**
@@ -114,8 +140,8 @@ export class ImageHandler {
 			const { pageId } = options || {};
 
 			// Generate filename
-			const filename = this.generateFilename(url, pageId);
-			const localPath = path.join(this.imageDir, filename);
+			let filename = this.generateFilename(url, pageId);
+			let localPath = path.join(this.imageDir, filename);
 			let publicPath = this.config.images.outputDir + '/' + filename;
 
 			// Ensure publicPath always starts with '/'
@@ -130,13 +156,42 @@ export class ImageHandler {
 
 			// Skip if already exists
 			if (!fs.existsSync(localPath)) {
-				this.logger.log(`📥 Downloading image: ${filename}`);
-				await this.downloadImage(url, localPath);
-
-				// TODO: Add webp conversion here if format is 'webp'
-				// For now, we'll just copy the original
-
-				this.logger.log(`✅ Downloaded: ${filename}`);
+				if (this.config.images.format === 'webp') {
+					// For webp conversion, download to temporary file first
+					const tempPath = localPath.replace('.webp', '.tmp');
+					this.logger.log(`📥 Downloading image for webp conversion: ${filename}`);
+					await this.downloadImage(url, tempPath);
+					
+					try {
+						this.logger.log(`🔄 Converting to webp: ${filename}`);
+						await this.convertToWebp(tempPath, localPath);
+						this.logger.log(`✅ Converted to webp: ${filename}`);
+					} catch (conversionError) {
+						// If webp conversion fails, keep original image with original extension
+						this.logger.warn(`⚠️  Webp conversion failed for ${filename}, keeping original format`);
+						const originalFilename = filename.replace('.webp', path.extname(new URL(url).pathname) || '.jpg');
+						const originalPath = path.join(this.imageDir, originalFilename);
+						
+						// Move temp file to original format path
+						await fs.promises.rename(tempPath, originalPath);
+						
+						// Update paths to reflect original format
+						localPath = originalPath;
+						publicPath = this.config.images.outputDir + '/' + originalFilename;
+						if (!publicPath.startsWith('/')) {
+							publicPath = '/' + publicPath;
+						}
+						if (publicPath.startsWith('/public/')) {
+							publicPath = publicPath.replace(/^\/public/, '');
+						}
+						filename = originalFilename;
+					}
+				} else {
+					// Original format - download directly
+					this.logger.log(`📥 Downloading image: ${filename}`);
+					await this.downloadImage(url, localPath);
+					this.logger.log(`✅ Downloaded: ${filename}`);
+				}
 			} else {
 				this.logger.log(`⏭️  Image already exists: ${filename}`);
 			}
@@ -145,7 +200,7 @@ export class ImageHandler {
 				originalUrl: url,
 				localPath,
 				publicPath,
-				format: path.extname(filename).substring(1),
+				format: path.extname(filename).substring(1) || 'jpg',
 			};
 
 			this.processedImages.set(url, imageInfo);

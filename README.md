@@ -93,6 +93,36 @@ module.exports = {
 
 **Note:** Error messages are always displayed regardless of the verbose setting for debugging purposes.
 
+### WebP Image Optimization
+
+notion-nextjs can automatically convert images to WebP format for better performance and smaller file sizes:
+
+```javascript
+// notion.config.js
+module.exports = {
+  databases: {
+    blog: 'your-database-id'
+  },
+  images: {
+    enabled: true,
+    format: 'webp',  // Convert images to WebP
+    quality: 80,     // WebP quality (1-100)
+    outputDir: '/public/images/notion'
+  }
+  // ... other options
+};
+```
+
+**Benefits:**
+- **Smaller file sizes:** WebP images are typically 20-30% smaller than JPEG/PNG
+- **Automatic conversion:** Original images are downloaded and converted seamlessly
+- **Fallback handling:** If conversion fails, original format is preserved
+- **Quality control:** Adjustable compression quality
+
+Set `format: 'original'` to disable conversion and keep images in their original format.
+
+**Note:** This feature requires comprehensive unit tests to ensure conversion reliability across different image formats and edge cases.
+
 ## To Do
 
 - [x] Next.js example
@@ -104,6 +134,6 @@ module.exports = {
 - [ ] Simplify public API
 - [ ] Next.js ISR support
 - [ ] Static import support for next/image
-- [ ] Webp image optimization
+- [x] Webp image optimization
 - [ ] Option to disable icon downloading
 - [x] Option to disable the console logs
