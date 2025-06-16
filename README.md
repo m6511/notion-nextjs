@@ -121,6 +121,8 @@ module.exports = {
 
 Set `format: 'original'` to disable conversion and keep images in their original format.
 
+**Note:** This feature requires comprehensive unit tests to ensure conversion reliability across different image formats and edge cases.
+
 ## To Do
 
 - [x] Next.js example
