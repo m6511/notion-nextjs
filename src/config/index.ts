@@ -7,6 +7,7 @@ export const DEFAULT_CONFIG: NotionNextJSRuntimeConfig = {
 	outputDir: '.notion-cache',
 	propertyNaming: 'camelCase',
 	typesPath: 'types/notion.ts',
+	verbose: true,
 	images: {
 		enabled: true,
 		outputDir: '/public/images/notion',

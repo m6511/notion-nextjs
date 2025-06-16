@@ -10,6 +10,7 @@ module.exports = {
 	dataSource: 'local',
 	propertyNaming: 'camelCase',
 	typesPath: 'src/types/notion.ts',
+	verbose: true,
 	images: {
 		enabled: true,
 		outputDir: '/public/images/notion',

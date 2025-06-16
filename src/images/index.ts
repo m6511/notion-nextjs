@@ -4,6 +4,7 @@ import * as https from 'https';
 import * as http from 'http';
 import { NotionNextJSRuntimeConfig } from '../types';
 import { SimplifiedPage } from '../utils/property-extractor';
+import { Logger } from '../utils/logger';
 
 export interface ImageInfo {
 	originalUrl: string;
@@ -16,9 +17,11 @@ export class ImageHandler {
 	private config: NotionNextJSRuntimeConfig;
 	private imageDir: string;
 	private processedImages: Map<string, ImageInfo> = new Map();
+	private logger: Logger;
 
-	constructor(config: NotionNextJSRuntimeConfig) {
+	constructor(config: NotionNextJSRuntimeConfig, logger: Logger) {
 		this.config = config;
+		this.logger = logger;
 		this.imageDir = path.join(process.cwd(), config.images.outputDir);
 	}
 
@@ -127,15 +130,15 @@ export class ImageHandler {
 
 			// Skip if already exists
 			if (!fs.existsSync(localPath)) {
-				console.log(`📥 Downloading image: ${filename}`);
+				this.logger.log(`📥 Downloading image: ${filename}`);
 				await this.downloadImage(url, localPath);
 
 				// TODO: Add webp conversion here if format is 'webp'
 				// For now, we'll just copy the original
 
-				console.log(`✅ Downloaded: ${filename}`);
+				this.logger.log(`✅ Downloaded: ${filename}`);
 			} else {
-				console.log(`⏭️  Image already exists: ${filename}`);
+				this.logger.log(`⏭️  Image already exists: ${filename}`);
 			}
 
 			const imageInfo: ImageInfo = {
@@ -148,7 +151,7 @@ export class ImageHandler {
 			this.processedImages.set(url, imageInfo);
 			return imageInfo;
 		} catch (error) {
-			console.error(`❌ Failed to process image ${url}:`, error);
+			this.logger.error(`❌ Failed to process image ${url}:`, error);
 			return null;
 		}
 	}
@@ -210,7 +213,7 @@ export class ImageHandler {
 	async processPages(pages: SimplifiedPage[]): Promise<SimplifiedPage[]> {
 		if (!this.config.images.enabled) return pages;
 
-		console.log(`\n🖼️  Processing images for ${pages.length} pages...`);
+		this.logger.log(`\n🖼️  Processing images for ${pages.length} pages...`);
 		await this.init();
 
 		const processedPages = [];
@@ -219,7 +222,7 @@ export class ImageHandler {
 			processedPages.push(processed);
 		}
 
-		console.log(`✅ Processed ${this.processedImages.size} unique images`);
+		this.logger.log(`✅ Processed ${this.processedImages.size} unique images`);
 		return processedPages;
 	}
 
